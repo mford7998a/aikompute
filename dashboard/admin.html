@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Logic — AI Inference Gateway</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono&display=swap">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --bg-admin: #05070a;
+            --accent-admin: #10b981;
+            /* Green for success/money */
+            --accent-admin-glow: rgba(16, 185, 129, 0.15);
+        }
+
+        body.admin-mode {
+            background-color: var(--bg-admin);
+        }
+
+        .admin-sidebar {
+            border-right: 1px solid rgba(16, 185, 129, 0.2);
+        }
+
+        .admin-nav-link.active {
+            color: var(--accent-admin);
+            background: var(--accent-admin-glow);
+        }
+
+        .admin-btn-primary {
+            background: var(--accent-admin);
+        }
+
+        .admin-btn-primary:hover {
+            background: #059669;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+        }
+
+        .chart-container {
+            position: relative;
+            height: 300px;
+            width: 100%;
+            margin-top: 1rem;
+        }
+
+        .metric-card {
+            border-left: 4px solid var(--accent-admin);
+        }
+
+        .forecast-card {
+            border-left: 4px solid #f59e0b;
+        }
+
+        .provider-pill {
+            display: inline-flex;
+            align-items: center;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-healthy {
+            background: rgba(16, 185, 129, 0.2);
+            color: #10b981;
+        }
+
+        .status-degraded {
+            background: rgba(245, 158, 11, 0.2);
+            color: #f59e0b;
+        }
+
+        .status-unhealthy {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+        }
+
+        .growth-positive {
+            color: #10b981;
+        }
+
+        .growth-negative {
+            color: #ef4444;
+        }
+
+        .search-bar {
+            background: var(--bg-input);
+            border: 1px solid var(--border);
+            padding: 0.5rem 1rem;
+            border-radius: var(--radius-sm);
+            color: white;
+            width: 300px;
+        }
+
+        .user-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .user-mini-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.25rem;
+        }
+
+        .forecast-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .forecast-stat {
+            background: rgba(245, 158, 11, 0.05);
+            border: 1px solid rgba(245, 158, 11, 0.1);
+            padding: 1rem;
+            border-radius: var(--radius);
+        }
+
+        .account-need-list {
+            list-style: none;
+            margin-top: 1rem;
+        }
+
+        .account-need-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .need-count {
+            font-weight: 700;
+            color: #f59e0b;
+        }
+    </style>
+</head>
+
+<body class="admin-mode">
+
+    <div id="auth-screen" class="auth-screen">
+        <div class="auth-card">
+            <div class="auth-logo">
+                <div class="logo-icon admin-btn-primary">A</div>
+                <h1>Admin Logic</h1>
+                <p class="subtitle">Business Intelligence & Controls</p>
+            </div>
+
+            <div id="login-form" class="auth-form">
+                <h2>Admin Login</h2>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="login-email" placeholder="admin@example.com">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="login-password" placeholder="••••••••">
+                </div>
+                <button onclick="adminLogin()" class="btn btn-primary btn-full admin-btn-primary">Access Internal
+                    Systems</button>
+                <div id="auth-error" class="alert alert-error" style="display: none;"></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="dashboard" class="dashboard" style="display: none;">
+        <!-- Sidebar -->
+        <aside class="sidebar admin-sidebar">
+            <div class="sidebar-header">
+                <div class="logo-icon small admin-btn-primary">A</div>
+                <span>Admin Panel</span>
+            </div>
+            <nav class="nav-links">
+                <a class="nav-link admin-nav-link active" data-tab="overview" onclick="showTab('overview')">
+                    <i>📊</i> Executive Summary
+                </a>
+                <a class="nav-link admin-nav-link" data-tab="users" onclick="showTab('users')">
+                    <i>👥</i> User Management
+                </a>
+                <a class="nav-link admin-nav-link" data-tab="financials" onclick="showTab('financials')">
+                    <i>💰</i> Revenue & Billing
+                </a>
+                <a class="nav-link admin-nav-link" data-tab="forecasting" onclick="showTab('forecasting')">
+                    <i>📈</i> Big Data Forecast
+                </a>
+                <a class="nav-link admin-nav-link" data-tab="providers" onclick="showTab('providers')">
+                    <i>🔌</i> Provider Health
+                </a>
+                <a class="nav-link admin-nav-link" data-tab="models" onclick="showTab('models')">
+                    <i>🤖</i> Model Analytics
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="user-info" id="admin-email">admin@localhost</div>
+                <button onclick="logout()" class="btn btn-sm btn-ghost btn-full">Sign Out</button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+
+            <!-- Overview Tab -->
+            <div id="tab-overview" class="tab-content active">
+                <div class="page-header">
+                    <h1>Executive Summary</h1>
+                    <div class="balance-badge">
+                        <span class="balance-label">System Revenue:</span>
+                        <span class="balance-amount" id="total-revenue">$0.00</span>
+                    </div>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card metric-card gradient-blue">
+                        <div class="stat-icon">👥</div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="stat-total-users">0</div>
+                            <div class="stat-label">Total Users</div>
+                        </div>
+                    </div>
+                    <div class="stat-card metric-card gradient-purple">
+                        <div class="stat-icon">🪙</div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="stat-total-tokens">0</div>
+                            <div class="stat-label">Total Tokens (30d)</div>
+                        </div>
+                    </div>
+                    <div class="stat-card metric-card gradient-green">
+                        <div class="stat-icon">💵</div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="stat-revenue-30d">$0.00</div>
+                            <div class="stat-label">Revenue (30d)</div>
+                        </div>
+                    </div>
+                    <div class="stat-card metric-card gradient-orange">
+                        <div class="stat-icon">⚠️</div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="stat-error-rate">0%</div>
+                            <div class="stat-label">System Error Rate</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem; margin-top: 2rem;">
+                    <div class="card">
+                        <h2>Token Usage (Last 30 Days)</h2>
+                        <div class="chart-container">
+                            <canvas id="usageChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <h2>Top Providers</h2>
+                        <div id="provider-summary-list">
+                            <!-- Provider stats injected here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Users Tab -->
+            <div id="tab-users" class="tab-content">
+                <div class="page-header">
+                    <h1>User Management</h1>
+                    <div style="display: flex; gap: 1rem;">
+                        <input type="text" id="user-search" class="search-bar" placeholder="Search email or name..."
+                            oninput="debounce(loadUsers, 500)()">
+                        <button onclick="loadUsers()" class="btn btn-primary admin-btn-primary">Search</button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="usage-table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>User</th>
+                                    <th>Balance</th>
+                                    <th>Tokens (Total)</th>
+                                    <th>Requests (Today)</th>
+                                    <th>Last Active</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="users-table-body">
+                                <!-- Users list injected here -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="users-pagination"
+                        style="margin-top: 1rem; display: flex; justify-content: center; gap: 0.5rem;">
+                        <!-- Pagination injected here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Financials Tab -->
+            <div id="tab-financials" class="tab-content">
+                <div class="page-header">
+                    <h1>Revenue & Billing</h1>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-card gradient-green">
+                        <div class="stat-icon">💰</div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="fin-all-time">$0.00</div>
+                            <div class="stat-label">All-Time Revenue</div>
+                        </div>
+                    </div>
+                    <div class="stat-card gradient-blue">
+                        <div class="stat-icon">📈</div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="fin-arpu">$0.00</div>
+                            <div class="stat-label">Avg Revenue Per User</div>
+                        </div>
+                    </div>
+                    <div class="stat-card gradient-purple">
+                        <div class="stat-icon">🛍️</div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="fin-purchases">0</div>
+                            <div class="stat-label">Total Purchases</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-top: 2rem;">
+                    <h2>Daily Revenue Tracking</h2>
+                    <div class="chart-container">
+                        <canvas id="revenueChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Forecasting Tab -->
+            <div id="tab-forecasting" class="tab-content">
+                <div class="page-header">
+                    <h1>Big Data Forecasting</h1>
+                    <div class="balance-badge" style="border-color: #f59e0b;">
+                        <span class="balance-label" style="color: #f59e0b;">Growth Potential:</span>
+                        <span class="balance-amount" id="forecast-growth" style="color: #f59e0b;">+0%</span>
+                    </div>
+                </div>
+
+                <div class="card forecast-card">
+                    <h2>Token Usage Prediction (Next 30 Days)</h2>
+                    <p style="color: var(--text-dim); font-size: 0.875rem; margin-bottom: 1rem;">
+                        Linear regression model based on current usage velocity and user acquisition trends.
+                    </p>
+                    <div class="chart-container">
+                        <canvas id="forecastChart"></canvas>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 2rem;">
+                    <div class="card forecast-card">
+                        <h2>Infrastructure Scaling Needs</h2>
+                        <p style="color: var(--text-dim); font-size: 0.875rem;">Accounts required to meet predicted
+                            30-day demand without hitting rate limits.</p>
+
+                        <div id="account-needs-container">
+                            <!-- Account needs list injected here -->
+                        </div>
+                    </div>
+
+                    <div class="card forecast-card">
+                        <h2>30-Day Business Outlook</h2>
+                        <div class="forecast-grid">
+                            <div class="forecast-stat">
+                                <div class="stat-label">Target Daily Tokens</div>
+                                <div class="stat-value" id="target-daily-tokens">0</div>
+                            </div>
+                            <div class="forecast-stat">
+                                <div class="stat-label">Target Monthly Tokens</div>
+                                <div class="stat-value" id="target-monthly-tokens">0</div>
+                            </div>
+                            <div class="forecast-stat">
+                                <div class="stat-label">Accounts to Acquire</div>
+                                <div class="stat-value" id="accounts-to-acquire">0</div>
+                            </div>
+                            <div class="forecast-stat">
+                                <div class="stat-label">Predicted Users</div>
+                                <div class="stat-value" id="predicted-users">0</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Providers Tab -->
+            <div id="tab-providers" class="tab-content">
+                <div class="page-header">
+                    <h1>Provider Health Monitor</h1>
+                </div>
+
+                <div id="provider-health-grid" class="user-grid">
+                    <!-- Provider cards injected here -->
+                </div>
+
+                <div class="card" style="margin-top: 2rem;">
+                    <h2>Traffic Distribution (24h)</h2>
+                    <div class="chart-container">
+                        <canvas id="providerChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Models Tab -->
+            <div id="tab-models" class="tab-content">
+                <div class="page-header">
+                    <h1>Model Performance Analytics</h1>
+                </div>
+
+                <div class="card">
+                    <div class="usage-table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Model Name</th>
+                                    <th>Provider</th>
+                                    <th>Requests</th>
+                                    <th>Total Tokens</th>
+                                    <th>Avg Latency</th>
+                                    <th>Unique Users</th>
+                                    <th>Profitability</th>
+                                </tr>
+                            </thead>
+                            <tbody id="models-table-body">
+                                <!-- Model stats injected here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script src="admin.js"></script>
+</body>
+
+</html>
