@@ -1,0 +1,42 @@
+# Environment
+.env
+__pycache__/
+*.pyc
+.venv/
+node_modules/
+
+# Credentials (NEVER commit these)
+**/*.json
+!aiclient2api-configs/config.json
+!aiclient2api-configs/provider_pools.json
+!aiclient2api-configs/plugins.json
+!antigravity2api-nodejs/data/quotas.json
+!test_payload.json
+
+# Temporary/Cache/Untitled files
+*.tmp
+*.lock
+usage-cache.json
+token-store.json
+Untitled-*.txt
+logs.txt
+test_results.txt
+mford7998a_*.txt
+gmail_variants.txt
+qwen-accounts.json
+scripts/*.json
+windsurf_traffic.json
+push_error.txt
+
+# Logs
+logs/
+*.log
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# Docker volumes
+pgdata/
+redisdata/
