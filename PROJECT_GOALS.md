@@ -36,7 +36,6 @@ These microservices take standard OpenAI-formatted requests and translate them i
 - **Copilot-API**: Leverages GitHub Copilot authentication to act as an OpenAI/Anthropic proxy.
 - **WebAI2API**: Handles browser-automation driven integrations (e.g., Trae, MarsCode).
 
-*(Note: While tools like `verdent2api` exist in the codebase for local desktop MITM hacking, they must be adapted or replaced for a cloud-deployed environment to prevent rate-limiting a single local machine.)*
 
 ## 4. Key Goals for Future Development (Agent Directives)
 
@@ -90,7 +89,6 @@ When specific pools run dry, or for offering direct OpenAI models, the system le
 ### C. Complete Fallback Chain (Circuit Breaker)
 When a user requests a generic `"auto"` model or a model fails across its primary provider, the Circuit Breaker iterates through this priority queue:
 
-1. **Local Agent (Dev Only)**: `verdent2api` (Should be ignored in production)
 2. **Antigravity (`gemini-antigravity`)**: Primary free tier for Gemini models.
 3. **Gemini CLI (`gemini-cli-oauth`)**: Secondary backup free tier for Gemini models.
 4. **Amazon Kiro (`claude-kiro-oauth`)**: Primary free tier for Claude models.

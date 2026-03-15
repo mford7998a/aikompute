@@ -62,10 +62,6 @@ MODEL_TO_PROVIDER = {
     # Also accept the raw model names Antigravity uses
     "gemini-2.5-computer-use-preview-10-2025": "gemini-antigravity",
 
-    # Verdent proxy requests
-    "verdent": "verdent2api",
-    "verdent-chat": "verdent2api",
-    "verdent-agent": "verdent2api",
 
     # Claude models → Kiro first (AG is the fallback in config.json/proxy logic)
     "claude-sonnet-4-6": "gemini-antigravity",
@@ -141,12 +137,10 @@ PROVIDER_LABELS = {
     "webai2api": "Standard API",
     "github-models": "GitHub Models",
     "copilot-api": "GitHub Copilot",
-    "verdent2api": "Verdent Native",
 }
 
 # Auto-routing: antigravity first since that's what we have
 AUTO_ROUTE_ORDER = [
-    "verdent2api",
     "gemini-antigravity",
     "gemini-cli-oauth",
     "claude-kiro-oauth",
@@ -183,8 +177,6 @@ def resolve_provider(model: str) -> str:
         return "claude-kiro-oauth"
     elif model_lower.startswith("qwen"):
         return "openai-qwen-oauth"
-    elif model_lower.startswith("verdent"):
-        return "verdent2api"
     elif model_lower.startswith("gpt"):
         return "openai-custom"
 
@@ -220,9 +212,6 @@ class AIClient2APIProxy:
         # WebAI2API specific backend (Trae/MarsCode)
         self.webai_base_url = settings.WEBAI2API_BASE_URL.rstrip("/")
         self.webai_api_key = settings.WEBAI2API_KEY
-        # Verdent2api backend (Local Verdent agent)
-        self.verdent_base_url = settings.VERDENT2API_BASE_URL.rstrip("/")
-        self.verdent_api_key = settings.VERDENT2API_KEY
         # GitHub Models backend (free inference API via GitHub PAT)
         self.github_models_url = "https://models.inference.ai.azure.com"
         self.github_token = settings.GITHUB_TOKEN
@@ -246,8 +235,6 @@ class AIClient2APIProxy:
             return f"{self.ag_base_url}{path}"
         elif provider_type == "webai2api":
             return f"{self.webai_base_url}{path}"
-        elif provider_type == "verdent2api":
-            return f"{self.verdent_base_url}{path}"
         elif provider_type == "github-models":
             # GitHub Models uses the standard /v1/chat/completions path
             return f"{self.github_models_url}/v1/chat/completions"
@@ -263,8 +250,6 @@ class AIClient2APIProxy:
             key = self.ag_api_key
         elif provider_type == "webai2api":
             key = self.webai_api_key
-        elif provider_type == "verdent2api":
-            key = self.verdent_api_key
         elif provider_type == "github-models":
             key = self.github_token
         elif provider_type == "copilot-api":

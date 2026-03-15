@@ -22,9 +22,6 @@ class Settings(BaseSettings):
     ANTIGRAVITY2API_BASE_URL: str = "http://localhost:8045"
     ANTIGRAVITY2API_KEY: str = "123456"
 
-    # Verdent2API upstream (specialized for Verdent local agent)
-    VERDENT2API_BASE_URL: str = "http://localhost:8787"
-    VERDENT2API_KEY: str = "123456"
 
     # WebAI2API upstream (specialized for Trae/MarsCode browser automation)
     WEBAI2API_BASE_URL: str = "http://localhost:3002"
@@ -58,7 +55,6 @@ class Settings(BaseSettings):
 
     # Provider route preferences (tried in this order for "auto" model)
     PROVIDER_PRIORITY: list = [
-        "verdent2api",
         "gemini-cli-oauth",
         "gemini-antigravity",
         "claude-kiro-oauth",

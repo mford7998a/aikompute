@@ -1,0 +1,164 @@
+version: "3.8"
+
+services:
+  # ============================================
+  # AIClient-2-API: Protocol transformation layer
+  # Converts Gemini CLI, Antigravity, Kiro, Qwen
+  # into OpenAI-compatible endpoints
+  # ============================================
+  aiclient2api:
+    image: justlikemaki/aiclient-2-api:latest
+    container_name: aiclient2api
+    ports:
+      - "3001:3000" # Web UI (internal management)
+      - "8085-8087:8085-8087" # OAuth callbacks
+      - "1455:1455" # Codex OAuth
+      - "19876-19880:19876-19880" # Kiro OAuth
+    volumes:
+      - ./aiclient2api-configs:/app/configs
+    restart: always
+    networks:
+      - inference-net
+
+  webai2api:
+    build:
+      context: ./WebAI2API
+    container_name: webai2api
+    ports:
+      - "3002:3000"
+    volumes:
+      - ./WebAI2API/data:/app/data
+      - ./WebAI2API/config.yaml:/app/data/config.yaml
+    restart: always
+    networks:
+      - inference-net
+  # Antigravity-2-API: Specialized Antigravity Proxy
+  # Handles ProjectId generation, system message merging,
+  # and thinking model optimizations.
+  # ============================================
+  antigravity2api:
+    image: ghcr.io/liuw1535/antigravity2api-nodejs:latest
+    container_name: antigravity2api
+    ports:
+      - "8045:8045"
+    volumes:
+      - ./antigravity2api-nodejs/data:/app/data
+      - ./antigravity2api-nodejs/public/images:/app/public/images
+      - ./antigravity2api-nodejs/config.json:/app/config.json
+      - ./antigravity2api-nodejs/.env:/app/.env
+    restart: always
+    networks:
+      - inference-net
+
+  # ============================================
+  # Copilot-API: GitHub Copilot → OpenAI/Anthropic proxy
+  # Exposes GitHub Copilot Free/Pro/Enterprise as an
+  # OpenAI-compatible endpoint. No API key needed —
+  # authenticates via your GitHub account OAuth.
+  # ============================================
+  copilot-api:
+    image: ghcr.io/ericc-ch/copilot-api:latest
+    container_name: copilot-api
+    ports:
+      - "4141:4141"
+    volumes:
+      # Persist GitHub token so auth survives container restarts
+      - ./copilot-api/data:/root/.local/share/copilot-api
+    restart: always
+    networks:
+      - inference-net
+
+
+  # ============================================
+  # PostgreSQL: User data, usage logs, billing
+  # ============================================
+  db:
+    image: postgres:16-alpine
+    container_name: inference-db
+    environment:
+      POSTGRES_DB: inference_gateway
+      POSTGRES_USER: inference
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-changeme_in_production}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./migrations:/docker-entrypoint-initdb.d
+    ports:
+      - "5432:5432"
+    restart: always
+    networks:
+      - inference-net
+
+  # ============================================
+  # Redis: Rate limiting, caching, sessions
+  # ============================================
+  redis:
+    image: redis:7-alpine
+    container_name: inference-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redisdata:/data
+    restart: always
+    networks:
+      - inference-net
+
+  # ============================================
+  # Billing Gateway: Our FastAPI service
+  # User management, API keys, token metering,
+  # billing, sits in front of AIClient-2-API
+  # ============================================
+  gateway:
+    build:
+      context: ./gateway
+      dockerfile: Dockerfile
+    container_name: inference-gateway
+    ports:
+      - "4000:4000"
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://inference:${DB_PASSWORD:-changeme_in_production}@db:5432/inference_gateway
+      - REDIS_URL=redis://redis:6379/0
+      - AICLIENT2API_BASE_URL=http://aiclient2api:3000
+      - AICLIENT2API_KEY=${AICLIENT2API_KEY:-PLACEHOLDER_KEY}
+      - ANTIGRAVITY2API_BASE_URL=http://antigravity2api:8045
+      - ANTIGRAVITY2API_KEY=${ANTIGRAVITY2API_KEY:-PLACEHOLDER_KEY}
+      - WEBAI2API_BASE_URL=http://webai2api:3000
+      - WEBAI2API_KEY=sk-webai-default-key-123
+      - GITHUB_TOKEN=${GITHUB_TOKEN:-}
+      - COPILOT_API_BASE_URL=http://copilot-api:4141
+      - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY:-}
+      - STRIPE_WEBHOOK_SECRET=${STRIPE_WEBHOOK_SECRET:-}
+      - MASTER_API_KEY=${MASTER_API_KEY:-sk-master-change-me}
+      - JWT_SECRET=${JWT_SECRET:-change-this-secret-in-production}
+    depends_on:
+      - db
+      - redis
+      - aiclient2api
+      - copilot-api
+    restart: always
+    networks:
+      - inference-net
+
+  # ============================================
+  # Dashboard: User-facing web UI
+  # ============================================
+  dashboard:
+    build:
+      context: ./dashboard
+      dockerfile: Dockerfile
+    container_name: inference-dashboard
+    ports:
+      - "3000:80"
+    depends_on:
+      - gateway
+    restart: always
+    networks:
+      - inference-net
+
+volumes:
+  pgdata:
+  redisdata:
+
+
+networks:
+  inference-net:
+    driver: bridge
