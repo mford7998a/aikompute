@@ -59,14 +59,24 @@ curl "https://api.aikompute.com/v1/chat/completions" \
 
 Replace `YOUR_API_KEY` with the key you generated in the previous step.
 
-## 5. Agent Setup Guides
+## 5. Agent & IDE Setup Guides
 
-To help you get started with your favorite AI agent tool, we've created specific, detailed guides:
+To help you get started with your favorite AI agent tool, we've created specific, detailed guides for every major platform:
 
+### Popular AI Agents
 - **[Roo Code Setup Guide](guide_roo_code.md)**
 - **[Cline Setup Guide](guide_cline.md)**
+- **[Aider CLI Guide](guide_aider.md)**
+- **[OpenCode Guide](guide_opencode.md)**
+
+### AI-Native IDEs
 - **[Cursor Setup Guide](guide_cursor.md)**
-- **[Generic Tools (AnythingLLM, etc.)](guide_generic_tools.md)**
+- **[Windsurf Setup Guide](guide_windsurf.md)**
+- **[Trae / MarsCode Guide](guide_trae_marscode.md)**
+- **[Warp Terminal Guide](guide_warp.md)**
+
+### Generic Tools
+- **[Generic Tools Guide (AnythingLLM, etc.)](guide_generic_tools.md)**
 
 ---
 
