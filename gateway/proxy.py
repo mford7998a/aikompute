@@ -579,10 +579,10 @@ class AIClient2APIProxy:
             ) as response:
                 if response.status_code != 200:
                     error_body = await response.aread()
-                    raise HTTPException(
-                        status_code=response.status_code,
-                        detail=f"Upstream error: {error_body.decode()[:500]}",
-                    )
+                    error_msg = error_body.decode()[:500].replace('"', '\\"').replace('\n', ' ')
+                    yield f'data: {{"error": {{"message": "Upstream proxy returned {response.status_code}: {error_msg}"}}}}\n\n'
+                    yield "data: [DONE]\n\n"
+                    return
 
                 async for line in response.aiter_lines():
                     if not line:
