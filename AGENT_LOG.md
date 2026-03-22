@@ -30,6 +30,12 @@ The system consists of:
   * Renamed landing page assets to `landing.css` and `landing.js` within the `dashboard/` folder to prevent naming collisions with the dashboard's `styles.css` and `app.js`.
   * Updated all hardcoded `https://aikompute.com/login` and `/signup` links in the landing page to use relative paths for better portability.
 
+* **Landing Page Content Update (`dashboard/index.html`, `dashboard/landing.css`)**:
+  * Updated hero section to prioritize Claude Sonnet/Opus and Gemini 3.1 branding.
+  * Added stylized model chips for quick recognition of available frontier models.
+  * Updated the Model Catalog table with the latest high-performance coding models (GPT 5.1 Codex, Claude 4.6, Gemini 3.1).
+
+
 ### [2026-03-22] Agent Actions (Continued)
 * **Native Protocol Endpoints (`gateway/routes_native.py`, `gateway/main.py`, `nginx/app.conf`)**:
   * Added Native Anthropic Endpoint (`POST /v1/messages`) allowing tools like Roo Code to bypass OpenAI conversion entirely and send native JSON tool schemas directly to the upstream proxy.

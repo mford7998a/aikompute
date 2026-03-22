@@ -14,7 +14,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="landing.css">
 </head>
 <body>
 
@@ -39,8 +39,8 @@
                 <li><a href="#faq" class="nav-link">FAQ</a></li>
             </ul>
             <div class="nav-actions">
-                <a href="https://aikompute.com/login" class="btn-nav-ghost" id="nav-login-btn">Log In</a>
-                <a href="https://aikompute.com/signup" class="btn-nav-primary" id="nav-signup-btn">Get Started Free</a>
+                <a href="/login" class="btn-nav-ghost" id="nav-login-btn">Log In</a>
+                <a href="/signup" class="btn-nav-primary" id="nav-signup-btn">Get Started Free</a>
             </div>
             <button class="mobile-toggle" id="mobile-toggle" aria-label="Toggle mobile menu">
                 <span></span><span></span><span></span>
@@ -67,11 +67,16 @@
                 Fraction of the Cost.
             </h1>
             <p class="hero-subtitle" id="hero-subtitle">
-                Access GPT-4o, Claude Sonnet, Gemini Pro, and more through a single, 
-                OpenAI-compatible API endpoint. No vendor lock-in. Pay only for the tokens you use.
+                Access the latest Claude Sonnet and Opus models available from Anthropic, widely considered the best coding models available anywhere. Also the latest Gemini models and OpenAI coding models.
             </p>
+            <div class="hero-model-chips" id="hero-model-chips">
+                <span class="model-chip anthropic">Claude 4.6 Sonnet & Opus</span>
+                <span class="model-chip google">Gemini 3.1 High/Low</span>
+                <span class="model-chip openai">GPT 5.1-5.3 Codex</span>
+                <span class="model-chip openai-max">GPT 5.4 Pro/Mini</span>
+            </div>
             <div class="hero-actions" id="hero-actions">
-                <a href="https://aikompute.com/signup" class="btn-hero-primary" id="hero-cta-primary">
+                <a href="/signup" class="btn-hero-primary" id="hero-cta-primary">
                     Start Building Free
                     <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                 </a>
@@ -320,53 +325,46 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td><span class="model-name">gemini-2.5-pro</span></td>
+                            <td><span class="model-name">claude-sonnet-4-6</span></td>
+                            <td><span class="provider-badge anthropic">Anthropic</span></td>
+                            <td class="price">$0.25 <span class="per">/1M tokens</span></td>
+                            <td class="price">$1.20 <span class="per">/1M tokens</span></td>
+                            <td><span class="savings-badge">Best for Code</span></td>
+                        </tr>
+                        <tr>
+                            <td><span class="model-name">claude-opus-4-6</span></td>
+                            <td><span class="provider-badge anthropic">Anthropic</span></td>
+                            <td class="price">$1.20 <span class="per">/1M tokens</span></td>
+                            <td class="price">$6.00 <span class="per">/1M tokens</span></td>
+                            <td><span class="savings-badge">Frontier Logic</span></td>
+                        </tr>
+                        <tr>
+                            <td><span class="model-name">gemini-3.1-high</span></td>
                             <td><span class="provider-badge google">Google</span></td>
                             <td class="price">$0.15 <span class="per">/1M tokens</span></td>
                             <td class="price">$0.60 <span class="per">/1M tokens</span></td>
                             <td><span class="savings-badge">~90% cheaper</span></td>
                         </tr>
                         <tr>
-                            <td><span class="model-name">gemini-3.0-pro</span></td>
-                            <td><span class="provider-badge google">Google</span></td>
-                            <td class="price">$0.20 <span class="per">/1M tokens</span></td>
-                            <td class="price">$0.80 <span class="per">/1M tokens</span></td>
-                            <td><span class="savings-badge">~85% cheaper</span></td>
-                        </tr>
-                        <tr>
-                            <td><span class="model-name">claude-sonnet-4-5</span></td>
-                            <td><span class="provider-badge anthropic">Anthropic</span></td>
-                            <td class="price">$0.30 <span class="per">/1M tokens</span></td>
-                            <td class="price">$1.50 <span class="per">/1M tokens</span></td>
-                            <td><span class="savings-badge">~90% cheaper</span></td>
-                        </tr>
-                        <tr>
-                            <td><span class="model-name">claude-opus-4-5</span></td>
-                            <td><span class="provider-badge anthropic">Anthropic</span></td>
-                            <td class="price">$1.50 <span class="per">/1M tokens</span></td>
-                            <td class="price">$7.50 <span class="per">/1M tokens</span></td>
-                            <td><span class="savings-badge">~90% cheaper</span></td>
-                        </tr>
-                        <tr>
-                            <td><span class="model-name">gpt-4o</span></td>
-                            <td><span class="provider-badge openai">OpenAI</span></td>
-                            <td class="price">$0.50 <span class="per">/1M tokens</span></td>
-                            <td class="price">$1.50 <span class="per">/1M tokens</span></td>
-                            <td><span class="savings-badge">~80% cheaper</span></td>
-                        </tr>
-                        <tr>
-                            <td><span class="model-name">gemini-2.0-flash</span></td>
+                            <td><span class="model-name">gemini-3.1-low</span></td>
                             <td><span class="provider-badge google">Google</span></td>
                             <td class="price">$0.02 <span class="per">/1M tokens</span></td>
                             <td class="price">$0.08 <span class="per">/1M tokens</span></td>
                             <td><span class="savings-badge">~95% cheaper</span></td>
                         </tr>
                         <tr>
-                            <td><span class="model-name">qwen3-coder-plus</span></td>
-                            <td><span class="provider-badge alibaba">Alibaba</span></td>
-                            <td class="price">$0.10 <span class="per">/1M tokens</span></td>
+                            <td><span class="model-name">gpt-5.1-codex-max</span></td>
+                            <td><span class="provider-badge openai">OpenAI</span></td>
                             <td class="price">$0.40 <span class="per">/1M tokens</span></td>
-                            <td><span class="savings-badge">~85% cheaper</span></td>
+                            <td class="price">$1.20 <span class="per">/1M tokens</span></td>
+                            <td><span class="savings-badge">Expert Coding</span></td>
+                        </tr>
+                        <tr>
+                            <td><span class="model-name">gpt-5.4-pro</span></td>
+                            <td><span class="provider-badge openai">OpenAI</span></td>
+                            <td class="price">$0.60 <span class="per">/1M tokens</span></td>
+                            <td class="price">$1.80 <span class="per">/1M tokens</span></td>
+                            <td><span class="savings-badge">Latest Gen</span></td>
                         </tr>
                         <tr>
                             <td><span class="model-name">auto</span><span class="auto-tag">smart routing</span></td>
@@ -404,7 +402,7 @@
                         <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8L6.5 11.5L13 5" stroke="#10b981" stroke-width="2" stroke-linecap="round"/></svg> Streaming support</li>
                         <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8L6.5 11.5L13 5" stroke="#10b981" stroke-width="2" stroke-linecap="round"/></svg> Dashboard analytics</li>
                     </ul>
-                    <a href="https://aikompute.com/signup" class="btn-pricing" id="pricing-starter-btn">Get Started</a>
+                    <a href="/signup" class="btn-pricing" id="pricing-starter-btn">Get Started</a>
                 </div>
                 <div class="pricing-card featured" id="pricing-developer">
                     <div class="pricing-badge">Most Popular</div>
@@ -423,7 +421,7 @@
                         <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8L6.5 11.5L13 5" stroke="#10b981" stroke-width="2" stroke-linecap="round"/></svg> Advanced analytics</li>
                         <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8L6.5 11.5L13 5" stroke="#10b981" stroke-width="2" stroke-linecap="round"/></svg> 20% bonus credits</li>
                     </ul>
-                    <a href="https://aikompute.com/signup" class="btn-pricing featured" id="pricing-dev-btn">Get Started</a>
+                    <a href="/signup" class="btn-pricing featured" id="pricing-dev-btn">Get Started</a>
                 </div>
                 <div class="pricing-card" id="pricing-scale">
                     <div class="pricing-header">
@@ -441,7 +439,7 @@
                         <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8L6.5 11.5L13 5" stroke="#10b981" stroke-width="2" stroke-linecap="round"/></svg> Priority support</li>
                         <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8L6.5 11.5L13 5" stroke="#10b981" stroke-width="2" stroke-linecap="round"/></svg> 50% bonus credits</li>
                     </ul>
-                    <a href="https://aikompute.com/signup" class="btn-pricing" id="pricing-scale-btn">Get Started</a>
+                    <a href="/signup" class="btn-pricing" id="pricing-scale-btn">Get Started</a>
                 </div>
             </div>
             <div class="pricing-footer">
@@ -561,7 +559,7 @@
                 <h2>Ready to build with <span class="gradient-text">every frontier model</span>?</h2>
                 <p>Join developers who are shipping faster and spending less. Get your API key in under 30 seconds.</p>
                 <div class="cta-actions">
-                    <a href="https://aikompute.com/signup" class="btn-hero-primary" id="footer-cta-primary">
+                    <a href="/signup" class="btn-hero-primary" id="footer-cta-primary">
                         Start Building Free
                         <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
                     </a>
@@ -594,7 +592,7 @@
                         <li><a href="#features">Features</a></li>
                         <li><a href="#models">Models</a></li>
                         <li><a href="#pricing">Pricing</a></li>
-                        <li><a href="https://aikompute.com/login">Dashboard</a></li>
+                        <li><a href="/login">Dashboard</a></li>
                     </ul>
                 </div>
                 <div class="footer-col">
@@ -622,6 +620,6 @@
         </div>
     </footer>
 
-    <script src="script.js"></script>
+    <script src="landing.js"></script>
 </body>
 </html>
