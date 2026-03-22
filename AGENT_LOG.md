@@ -22,6 +22,11 @@ The system consists of:
 ## Change Log
 
 ### [2026-03-22] Agent Actions
+* **Native Protocol Endpoints (`gateway/routes_native.py`, `gateway/main.py`)**:
+  * Added Native Anthropic Endpoint (`POST /v1/messages`) allowing tools like Roo Code to bypass OpenAI conversion entirely and send native JSON tool schemas directly to the upstream proxy.
+  * Added Native Gemini Endpoints (`POST /v1beta/models/{model}:generateContent` and `streamGenerateContent`).
+  * Implemented SSE stream parsing tailored to the specific chunk formats of Anthropic (`content_block_delta`) and Gemini to ensure output text tokens are properly aggregated, metered, and accurately billed to the user's PostgreSQL database balance.
+
 * **Routing & Model Translation Fixes (`gateway/proxy.py`)**:
   * Removed all internal model substitutions for Antigravity, Gemini CLI, and Kiro. The gateway now passes the exact requested model name (e.g. `claude-sonnet-4-6`) directly to the upstream provider since they handle model mappings natively.
   * Updated `chat_completion_stream()` to actually use the translated model name (was previously sending raw frontend aliases which crashed upstream providers).

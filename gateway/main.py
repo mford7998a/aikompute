@@ -58,10 +58,12 @@ app.add_middleware(
 
 # -- Mount routes --
 from routes_chat import router as chat_router
+from routes_native import router as native_router
 from routes_users import router as users_router
 from routes_admin import router as admin_router
 
 app.include_router(chat_router, tags=["Inference"])
+app.include_router(native_router, tags=["Native Protocols"])
 app.include_router(users_router, prefix="/api", tags=["Users & Billing"])
 app.include_router(admin_router, prefix="/api", tags=["Admin"])
 
