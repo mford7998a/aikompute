@@ -11,6 +11,8 @@ node_modules/
 !aiclient2api-configs/provider_pools.json
 !aiclient2api-configs/plugins.json
 !antigravity2api-nodejs/data/quotas.json
+!antigravity2api-nodejs/config.json
+!antigravity2api-nodejs/.env
 !test_payload.json
 
 # Temporary/Cache/Untitled files
