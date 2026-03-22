@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="AIKompute — Access top-tier AI models like GPT-4o, Claude, and Gemini through one unified, OpenAI-compatible API. Simple monthly subscription plans for every team size.">
+    <meta name="keywords" content="AI API, GPT-4o, Claude, Gemini, OpenAI compatible, inference API, AI gateway, cheap AI API, developer API, subscription">
+    <meta name="author" content="AIKompute">
+    <meta property="og:title" content="AIKompute — Unified AI API Platform">
+    <meta property="og:description" content="One API key. Every frontier model. Fraction of the cost.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://aikompute.com">
+    <title>AIKompute — Unified AI Inference API | GPT-4o, Claude, Gemini</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+    <!-- ======================== NAVIGATION ======================== -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-container">
+            <a href="#" class="nav-logo" id="nav-logo">
+                <div class="logo-mark">
+                    <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+                        <path d="M14 2L26 8V20L14 26L2 20V8L14 2Z" stroke="url(#logoGrad)" stroke-width="2" fill="none"/>
+                        <path d="M14 10L20 13V19L14 22L8 19V13L14 10Z" fill="url(#logoGrad)"/>
+                        <defs><linearGradient id="logoGrad" x1="2" y1="2" x2="26" y2="26"><stop stop-color="#818cf8"/><stop offset="1" stop-color="#6366f1"/></linearGradient></defs>
+                    </svg>
+                </div>
+                <span>AIKompute</span>
+            </a>
+            <ul class="nav-links" id="nav-links">
+                <li><a href="#features" class="nav-link">Features</a></li>
+                <li><a href="#models" class="nav-link">Models</a></li>
+                <li><a href="#pricing" class="nav-link">Pricing</a></li>
+                <li><a href="#docs" class="nav-link">Docs</a></li>
+                <li><a href="#faq" class="nav-link">FAQ</a></li>
+            </ul>
+            <div class="nav-actions">
+                <a href="https://aikompute.com/login" class="btn-nav-ghost" id="nav-login-btn">Log In</a>
+                <a href="https://aikompute.com/signup" class="btn-nav-primary" id="nav-signup-btn">Get Started Free</a>
+            </div>
+            <button class="mobile-toggle" id="mobile-toggle" aria-label="Toggle mobile menu">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- ======================== HERO ======================== -->
+    <section class="hero" id="hero">
+        <div class="hero-bg">
+            <div class="hero-glow hero-glow-1"></div>
+            <div class="hero-glow hero-glow-2"></div>
+            <div class="hero-glow hero-glow-3"></div>
+            <div class="hero-grid"></div>
+        </div>
+        <div class="hero-container">
+            <div class="hero-badge" id="hero-badge">
+                <span class="badge-dot"></span>
+                <span>Now supporting Gemini 3.1 Pro & Claude 4.6</span>
+            </div>
+            <h1 class="hero-title" id="hero-title">
+                One API.<br>
+                <span class="gradient-text">Every Frontier Model.</span><br>
+                Fraction of the Cost.
+            </h1>
+            <p class="hero-subtitle" id="hero-subtitle">
+                Access GPT-4o, Claude Sonnet, Gemini Pro, and more through a single, 
+                OpenAI-compatible API endpoint. No vendor lock-in. Simple monthly plans that scale with you.
+            </p>
+            <div class="hero-actions" id="hero-actions">
+                <a href="https://aikompute.com/signup" class="btn-hero-primary" id="hero-cta-primary">
+                    Start Building Free
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                </a>
+                <a href="#docs" class="btn-hero-ghost" id="hero-cta-docs">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 4L8 1L14 4V12L8 15L2 12V4Z" stroke="currentColor" stroke-width="1.5"/></svg>
+                    View Documentation
+                </a>
+            </div>
+            <div class="hero-code" id="hero-code">
+                <div class="code-window">
+                    <div class="code-header">
+                        <div class="code-dots">
+                            <span class="dot red"></span>
+                            <span class="dot yellow"></span>
+                            <span class="dot green"></span>
+                        </div>
+                        <div class="code-tabs">
+                            <button class="code-tab active" data-lang="python" id="code-tab-python">Python</button>
+                            <button class="code-tab" data-lang="javascript" id="code-tab-js">Node.js</button>
+                            <button class="code-tab" data-lang="curl" id="code-tab-curl">cURL</button>
+                        </div>
+                        <button class="copy-btn" id="copy-code-btn" title="Copy to clipboard">
+                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="4" y="4" width="9" height="9" rx="1.5" stroke="currentColor" stroke-width="1.5"/><path d="M10 4V2.5A1.5 1.5 0 008.5 1H2.5A1.5 1.5 0 001 2.5V8.5A1.5 1.5 0 002.5 10H4" stroke="currentColor" stroke-width="1.5"/></svg>
+                        </button>
+                    </div>
+                    <div class="code-body">
+                        <pre class="code-block active" data-lang="python"><code><span class="kw">from</span> <span class="mod">openai</span> <span class="kw">import</span> <span class="cls">OpenAI</span>
+
+<span class="var">client</span> = <span class="cls">OpenAI</span>(
+    <span class="param">api_key</span>=<span class="str">"sk-inf-your-key"</span>,
+    <span class="param">base_url</span>=<span class="str">"https://api.aikompute.com/v1"</span>
+)
+
+<span class="var">response</span> = <span class="var">client</span>.<span class="fn">chat</span>.<span class="fn">completions</span>.<span class="fn">create</span>(
+    <span class="param">model</span>=<span class="str">"gemini-2.5-pro"</span>,
+    <span class="param">messages</span>=[{<span class="str">"role"</span>: <span class="str">"user"</span>, <span class="str">"content"</span>: <span class="str">"Hello!"</span>}]
+)
+
+<span class="fn">print</span>(<span class="var">response</span>.<span class="fn">choices</span>[<span class="num">0</span>].<span class="fn">message</span>.<span class="fn">content</span>)</code></pre>
+                        <pre class="code-block" data-lang="javascript"><code><span class="kw">import</span> <span class="cls">OpenAI</span> <span class="kw">from</span> <span class="str">"openai"</span>;
+
+<span class="kw">const</span> <span class="var">client</span> = <span class="kw">new</span> <span class="cls">OpenAI</span>({
+    <span class="param">apiKey</span>: <span class="str">"sk-inf-your-key"</span>,
+    <span class="param">baseURL</span>: <span class="str">"https://api.aikompute.com/v1"</span>
+});
+
+<span class="kw">const</span> <span class="var">response</span> = <span class="kw">await</span> <span class="var">client</span>.<span class="fn">chat</span>.<span class="fn">completions</span>.<span class="fn">create</span>({
+    <span class="param">model</span>: <span class="str">"claude-sonnet-4-5"</span>,
+    <span class="param">messages</span>: [{<span class="str">"role"</span>: <span class="str">"user"</span>, <span class="str">"content"</span>: <span class="str">"Hello!"</span>}]
+});
+
+<span class="var">console</span>.<span class="fn">log</span>(<span class="var">response</span>.<span class="fn">choices</span>[<span class="num">0</span>].<span class="fn">message</span>.<span class="fn">content</span>);</code></pre>
+                        <pre class="code-block" data-lang="curl"><code><span class="fn">curl</span> <span class="str">"https://api.aikompute.com/v1/chat/completions"</span> \
+  <span class="param">-H</span> <span class="str">"Content-Type: application/json"</span> \
+  <span class="param">-H</span> <span class="str">"Authorization: Bearer sk-inf-your-key"</span> \
+  <span class="param">-d</span> <span class="str">'{
+    "model": "gpt-4o",
+    "messages": [
+      {"role": "user", "content": "Hello!"}
+    ]
+  }'</span></code></pre>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-trust" id="hero-trust">
+                <span class="trust-label">Fully compatible with</span>
+                <div class="trust-logos">
+                    <div class="trust-item">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="9" stroke="currentColor" stroke-width="1.5"/><path d="M7 10L10 7L13 10L10 13L7 10Z" fill="currentColor"/></svg>
+                        <span>OpenAI SDK</span>
+                    </div>
+                    <div class="trust-item">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 2L18 6V14L10 18L2 14V6L10 2Z" stroke="currentColor" stroke-width="1.5"/></svg>
+                        <span>LangChain</span>
+                    </div>
+                    <div class="trust-item">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="3" y="3" width="14" height="14" rx="3" stroke="currentColor" stroke-width="1.5"/><path d="M7 10H13M10 7V13" stroke="currentColor" stroke-width="1.5"/></svg>
+                        <span>LlamaIndex</span>
+                    </div>
+                    <div class="trust-item">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="3" fill="currentColor"/><circle cx="10" cy="10" r="7" stroke="currentColor" stroke-width="1.5"/></svg>
+                        <span>Vercel AI SDK</span>
+                    </div>
+                    <div class="trust-item">
+                        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 6L10 3L16 6V10C16 14 10 18 10 18C10 18 4 14 4 10V6Z" stroke="currentColor" stroke-width="1.5"/></svg>
+                        <span>Any OpenAI Client</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======================== SOCIAL PROOF COUNTER ======================== -->
+    <section class="social-proof" id="social-proof">
+        <div class="container">
+            <div class="proof-grid">
+                <div class="proof-item" id="proof-requests">
+                    <span class="proof-number" data-count="12500000">0</span>
+                    <span class="proof-label">API Requests Served</span>
+                </div>
+                <div class="proof-divider"></div>
+                <div class="proof-item" id="proof-models">
+                    <span class="proof-number" data-count="15">0</span>
+                    <span class="proof-label">Frontier Models</span>
+                </div>
+                <div class="proof-divider"></div>
+                <div class="proof-item" id="proof-uptime">
+                    <span class="proof-number" data-count="99.9" data-suffix="%" data-decimal="true">0</span>
+                    <span class="proof-label">Uptime SLA</span>
+                </div>
+                <div class="proof-divider"></div>
+                <div class="proof-item" id="proof-savings">
+                    <span class="proof-number" data-count="90" data-suffix="%">0</span>
+                    <span class="proof-label">Avg. Cost Savings</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======================== FEATURES ======================== -->
+    <section class="features" id="features">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">Why AIKompute</span>
+                <h2 class="section-title">Built for developers.<br><span class="gradient-text">Optimized for scale.</span></h2>
+                <p class="section-subtitle">Everything you need to integrate AI into your applications, without the complexity of managing multiple providers.</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card" id="feature-unified">
+                    <div class="feature-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 2L22 7V17L12 22L2 17V7L12 2Z" stroke="currentColor" stroke-width="2"/><path d="M12 8L16 10.5V15.5L12 18L8 15.5V10.5L12 8Z" fill="currentColor" opacity="0.3"/></svg>
+                    </div>
+                    <h3>Unified API</h3>
+                    <p>One endpoint, one format, every model. Drop-in replacement for OpenAI with zero code changes. Use your existing SDK.</p>
+                </div>
+                <div class="feature-card" id="feature-models">
+                    <div class="feature-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="6" cy="6" r="3" stroke="currentColor" stroke-width="2"/><circle cx="18" cy="6" r="3" stroke="currentColor" stroke-width="2"/><circle cx="6" cy="18" r="3" stroke="currentColor" stroke-width="2"/><circle cx="18" cy="18" r="3" stroke="currentColor" stroke-width="2"/><path d="M9 6H15M6 9V15M18 9V15M9 18H15" stroke="currentColor" stroke-width="1.5" stroke-dasharray="2 2"/></svg>
+                    </div>
+                    <h3>Multi-Model Access</h3>
+                    <p>GPT-4o, Claude Sonnet 4.5, Gemini 2.5 Pro, Qwen 3 Coder, and more — all through a single API key.</p>
+                </div>
+                <div class="feature-card" id="feature-cost">
+                    <div class="feature-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 2V22M17 5H9.5C7.01 5 5 7.01 5 9.5S7.01 14 9.5 14H14.5C16.99 14 19 16.01 19 18.5S16.99 23 14.5 23H7" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                    </div>
+                    <h3>Up to 90% Cheaper</h3>
+                    <p>Our intelligent routing delivers frontier models at a fraction of direct API costs. Predictable monthly pricing with generous limits.</p>
+                </div>
+                <div class="feature-card" id="feature-streaming">
+                    <div class="feature-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 12H7L10 4L14 20L17 12H20" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </div>
+                    <h3>Full Streaming Support</h3>
+                    <p>Server-Sent Events streaming works exactly like OpenAI. Real-time token delivery with <code>stream: true</code>.</p>
+                </div>
+                <div class="feature-card" id="feature-fallback">
+                    <div class="feature-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 4V9H9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M20 20V15H15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M4 9C5.5 5.5 9 3 13 3C17.97 3 22 7.03 22 12" stroke="currentColor" stroke-width="2"/><path d="M20 15C18.5 18.5 15 21 11 21C6.03 21 2 16.97 2 12" stroke="currentColor" stroke-width="2"/></svg>
+                    </div>
+                    <h3>Automatic Failover</h3>
+                    <p>Intelligent circuit breaker routes through fallback providers. If one source fails, your request completes seamlessly.</p>
+                </div>
+                <div class="feature-card" id="feature-tools">
+                    <div class="feature-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="2"/><rect x="14" y="3" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="2"/><rect x="3" y="14" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="2"/><rect x="14" y="14" width="7" height="7" rx="1.5" stroke="currentColor" stroke-width="2"/></svg>
+                    </div>
+                    <h3>Tool Calling & Functions</h3>
+                    <p>Full support for OpenAI-compatible function calling and tool_choice across all models. Build agentic workflows effortlessly.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======================== HOW IT WORKS ======================== -->
+    <section class="how-it-works" id="how-it-works">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">Get Started in Minutes</span>
+                <h2 class="section-title">Three steps to <span class="gradient-text">faster AI integration</span></h2>
+            </div>
+            <div class="steps-grid">
+                <div class="step-card" id="step-1">
+                    <div class="step-number">01</div>
+                    <div class="step-content">
+                        <h3>Pick your plan</h3>
+                        <p>Choose the subscription tier that fits your usage. Start with our free tier — no credit card required.</p>
+                    </div>
+                    <div class="step-visual">
+                        <div class="mini-terminal">
+                            <div class="terminal-header"><span class="terminal-dot"></span><span class="terminal-dot"></span><span class="terminal-dot"></span></div>
+                            <code>Plan: <span class="str">Developer — $29/mo</span></code>
+                        </div>
+                    </div>
+                </div>
+                <div class="step-connector"><svg width="40" height="40" viewBox="0 0 40 40"><path d="M12 20H28M28 20L22 14M28 20L22 26" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div>
+                <div class="step-card" id="step-2">
+                    <div class="step-number">02</div>
+                    <div class="step-content">
+                        <h3>Change one line of code</h3>
+                        <p>Point your existing OpenAI SDK to our endpoint. That's literally it — everything else works the same.</p>
+                    </div>
+                    <div class="step-visual">
+                        <div class="mini-terminal">
+                            <div class="terminal-header"><span class="terminal-dot"></span><span class="terminal-dot"></span><span class="terminal-dot"></span></div>
+                            <code>base_url=<span class="str">"api.aikompute.com"</span></code>
+                        </div>
+                    </div>
+                </div>
+                <div class="step-connector"><svg width="40" height="40" viewBox="0 0 40 40"><path d="M12 20H28M28 20L22 14M28 20L22 26" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div>
+                <div class="step-card" id="step-3">
+                    <div class="step-number">03</div>
+                    <div class="step-content">
+                        <h3>Ship faster, pay less</h3>
+                        <p>Access every frontier model within your plan limits. Predictable bill, no surprises.</p>
+                    </div>
+                    <div class="step-visual">
+                        <div class="mini-terminal success">
+                            <div class="terminal-header"><span class="terminal-dot"></span><span class="terminal-dot"></span><span class="terminal-dot"></span></div>
+                            <code>✓ <span class="str">200 OK</span> — 142 tokens</code>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======================== MODELS ======================== -->
+    <section class="models" id="models">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">Model Catalog</span>
+                <h2 class="section-title">Access the <span class="gradient-text">best models</span> from every provider</h2>
+                <p class="section-subtitle">From Google's Gemini to Anthropic's Claude to OpenAI's GPT — use them all without separate accounts or billing. All models included in every plan.</p>
+            </div>
+            <div class="models-table-wrapper">
+                <table class="models-table" id="models-table">
+                    <thead>
+                        <tr>
+                            <th>Model</th>
+                            <th>Provider</th>
+                            <th>Category</th>
+                            <th>Included In</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><span class="model-name">gemini-2.5-pro</span></td>
+                            <td><span class="provider-badge google">Google</span></td>
+                            <td class="price">Reasoning / Code</td>
+                            <td><span class="plan-included">All Plans</span></td>
+                        </tr>
+                        <tr>
+                            <td><span class="model-name">gemini-3.0-pro</span></td>
+                            <td><span class="provider-badge google">Google</span></td>
+                            <td class="price">Latest Frontier</td>
+                            <td><span class="plan-included">All Plans</span></td>
+                        </tr>
+                        <tr>
+                            <td><span class="model-name">claude-sonnet-4-5</span></td>
+                            <td><span class="provider-badge anthropic">Anthropic</span></td>
+                            <td class="price">Balanced / Code</td>
+                            <td><span class="plan-included">All Plans</span></td>
+                        </tr>
+                        <tr>
+                            <td><span class="model-name">claude-opus-4-5</span></td>
+                            <td><span class="provider-badge anthropic">Anthropic</span></td>
+                            <td class="price">Maximum Quality</td>
+                            <td><span class="plan-included-premium">Developer+</span></td>
+                        </tr>
+                        <tr>
+                            <td><span class="model-name">gpt-4o</span></td>
+                            <td><span class="provider-badge openai">OpenAI</span></td>
+                            <td class="price">General Purpose</td>
+                            <td><span class="plan-included">All Plans</span></td>
+                        </tr>
+                        <tr>
+                            <td><span class="model-name">gemini-2.0-flash</span></td>
+                            <td><span class="provider-badge google">Google</span></td>
+                            <td class="price">Fast / Lightweight</td>
+                            <td><span class="plan-included">All Plans</span></td>
+                        </tr>
+                        <tr>
+                            <td><span class="model-name">qwen3-coder-plus</span></td>
+                            <td><span class="provider-badge alibaba">Alibaba</span></td>
+                            <td class="price">Code Generation</td>
+                            <td><span class="plan-included">All Plans</span></td>
+                        </tr>
+                        <tr>
+                            <td><span class="model-name">auto</span><span class="auto-tag">smart routing</span></td>
+                            <td><span class="provider-badge auto">Auto</span></td>
+                            <td class="price" style="text-align:left;">Best model, automatically</td>
+                            <td><span class="plan-included">All Plans</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======================== PRICING ======================== -->
+    <section class="pricing" id="pricing">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">Simple Pricing</span>
+                <h2 class="section-title">Predictable monthly plans.<br><span class="gradient-text">No token calculators needed.</span></h2>
+                <p class="section-subtitle">Choose a plan that fits your usage. Upgrade, downgrade, or cancel anytime. Every plan includes access to all frontier models.</p>
+            </div>
+            <div class="billing-toggle" id="billing-toggle">
+                <button class="toggle-btn active" data-period="monthly" id="toggle-monthly">Monthly</button>
+                <button class="toggle-btn" data-period="annual" id="toggle-annual">Annual <span class="toggle-save">Save 20%</span></button>
+            </div>
+            <div class="pricing-grid">
+                <div class="pricing-card" id="pricing-free">
+                    <div class="pricing-header">
+                        <span class="pricing-name">Free</span>
+                        <div class="pricing-amount">
+                            <span class="currency">$</span><span class="price-value" data-monthly="0" data-annual="0">0</span>
+                        </div>
+                        <span class="pricing-period">forever free</span>
+                    </div>
+                    <ul class="pricing-features">
+                        <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8L6.5 11.5L13 5" stroke="#10b981" stroke-width="2" stroke-linecap="round"/></svg> 100K tokens / month</li>
+                        <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8L6.5 11.5L13 5" stroke="#10b981" stroke-width="2" stroke-linecap="round"/></svg> All standard models</li>
+                        <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8L6.5 11.5L13 5" stroke="#10b981" stroke-width="2" stroke-linecap="round"/></svg> 20 requests / minute</li>
+                        <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8L6.5 11.5L13 5" stroke="#10b981" stroke-width="2" stroke-linecap="round"/></svg> Streaming support</li>
+                        <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8L6.5 11.5L13 5" stroke="#10b981" stroke-width="2" stroke-linecap="round"/></svg> Community support</li>
+                    </ul>
+                    <a href="https://aikompute.com/signup" class="btn-pricing" id="pricing-free-btn">Get Started Free</a>
+                </div>
+                <div class="pricing-card featured" id="pricing-developer">
+                    <div class="pricing-badge">Most Popular</div>
+                    <div class="pricing-header">
+                        <span class="pricing-name">Developer</span>
+                        <div class="pricing-amount">
+                            <span class="currency">$</span><span class="price-value" data-monthly="29" data-annual="23">29</span>
+                        </div>
+                        <span class="pricing-period period-text">per month</span>
+                    </div>
+                    <ul class="pricing-features">
+                        <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8L6.5 11.5L13 5" stroke="#10b981" stroke-width="2" stroke-linecap="round"/></svg> 5M tokens / month</li>
+                        <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8L6.5 11.5L13 5" stroke="#10b981" stroke-width="2" stroke-linecap="round"/></svg> All models incl. Opus</li>
+                        <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8L6.5 11.5L13 5" stroke="#10b981" stroke-width="2" stroke-linecap="round"/></svg> 120 requests / minute</li>
+                        <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8L6.5 11.5L13 5" stroke="#10b981" stroke-width="2" stroke-linecap="round"/></svg> Streaming + tool calling</li>
+                        <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8L6.5 11.5L13 5" stroke="#10b981" stroke-width="2" stroke-linecap="round"/></svg> Advanced analytics</li>
+                        <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8L6.5 11.5L13 5" stroke="#10b981" stroke-width="2" stroke-linecap="round"/></svg> Priority support</li>
+                    </ul>
+                    <a href="https://aikompute.com/signup" class="btn-pricing featured" id="pricing-dev-btn">Start Free Trial</a>
+                </div>
+                <div class="pricing-card" id="pricing-team">
+                    <div class="pricing-header">
+                        <span class="pricing-name">Team</span>
+                        <div class="pricing-amount">
+                            <span class="currency">$</span><span class="price-value" data-monthly="99" data-annual="79">99</span>
+                        </div>
+                        <span class="pricing-period period-text">per month</span>
+                    </div>
+                    <ul class="pricing-features">
+                        <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8L6.5 11.5L13 5" stroke="#10b981" stroke-width="2" stroke-linecap="round"/></svg> 25M tokens / month</li>
+                        <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8L6.5 11.5L13 5" stroke="#10b981" stroke-width="2" stroke-linecap="round"/></svg> All models + dedicated routing</li>
+                        <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8L6.5 11.5L13 5" stroke="#10b981" stroke-width="2" stroke-linecap="round"/></svg> 300 requests / minute</li>
+                        <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8L6.5 11.5L13 5" stroke="#10b981" stroke-width="2" stroke-linecap="round"/></svg> Up to 5 team members</li>
+                        <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8L6.5 11.5L13 5" stroke="#10b981" stroke-width="2" stroke-linecap="round"/></svg> Everything in Developer</li>
+                        <li><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8L6.5 11.5L13 5" stroke="#10b981" stroke-width="2" stroke-linecap="round"/></svg> Dedicated support</li>
+                    </ul>
+                    <a href="https://aikompute.com/signup" class="btn-pricing" id="pricing-team-btn">Start Free Trial</a>
+                </div>
+            </div>
+            <div class="pricing-footer">
+                <p>Need unlimited tokens or custom SLAs? <a href="mailto:enterprise@aikompute.com" id="enterprise-link">Contact us for enterprise plans</a></p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======================== DOCS / DEVELOPER EXPERIENCE ======================== -->
+    <section class="developer-section" id="docs">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">Developer Experience</span>
+                <h2 class="section-title">Integrate with <span class="gradient-text">any framework</span></h2>
+                <p class="section-subtitle">AIKompute is a drop-in replacement for OpenAI. Works with every tool and framework in the ecosystem.</p>
+            </div>
+            <div class="dx-grid">
+                <div class="dx-card" id="dx-openai">
+                    <div class="dx-icon">🐍</div>
+                    <h3>OpenAI Python SDK</h3>
+                    <p>Change two lines. Use the official OpenAI Python library with AIKompute as a backend.</p>
+                    <a href="docs/getting_started.md" class="dx-link">View guide →</a>
+                </div>
+                <div class="dx-card" id="dx-langchain">
+                    <div class="dx-icon">🦜</div>
+                    <h3>LangChain</h3>
+                    <p>Build chains, agents, and RAG pipelines using AIKompute as your LLM provider.</p>
+                    <a href="docs/use_cases.md" class="dx-link">View guide →</a>
+                </div>
+                <div class="dx-card" id="dx-rest">
+                    <div class="dx-icon">⚡</div>
+                    <h3>REST API</h3>
+                    <p>Standard HTTP endpoints. Use any language — Go, Rust, Java, Ruby, or plain cURL.</p>
+                    <a href="docs/api_reference.md" class="dx-link">View guide →</a>
+                </div>
+                <div class="dx-card" id="dx-streaming">
+                    <div class="dx-icon">📡</div>
+                    <h3>Streaming SSE</h3>
+                    <p>Real-time token streaming via Server-Sent Events. Build chat UIs with instant responses.</p>
+                    <a href="docs/api_reference.md" class="dx-link">View guide →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======================== FAQ ======================== -->
+    <section class="faq" id="faq">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">FAQ</span>
+                <h2 class="section-title">Frequently asked <span class="gradient-text">questions</span></h2>
+            </div>
+            <div class="faq-list" id="faq-list">
+                <div class="faq-item" id="faq-1">
+                    <button class="faq-question" aria-expanded="false">
+                        <span>How is AIKompute compatible with OpenAI?</span>
+                        <svg class="faq-chevron" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M5 8L10 13L15 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                    </button>
+                    <div class="faq-answer">
+                        <p>AIKompute implements the full OpenAI Chat Completions API specification. You can use the official OpenAI Python SDK, Node.js SDK, or any OpenAI-compatible client by simply changing the <code>base_url</code> to <code>https://api.aikompute.com/v1</code> and using your AIKompute API key. Streaming, tool calling, and all standard parameters work identically.</p>
+                    </div>
+                </div>
+                <div class="faq-item" id="faq-2">
+                    <button class="faq-question" aria-expanded="false">
+                        <span>How can you offer models so much cheaper?</span>
+                        <svg class="faq-chevron" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M5 8L10 13L15 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                    </button>
+                    <div class="faq-answer">
+                        <p>We use intelligent routing and optimized infrastructure to deliver inference at significantly lower costs. Our architecture leverages efficient resource management and multi-provider orchestration, passing those savings directly to you while maintaining quality and reliability.</p>
+                    </div>
+                </div>
+                <div class="faq-item" id="faq-3">
+                    <button class="faq-question" aria-expanded="false">
+                        <span>What happens if I exceed my monthly token limit?</span>
+                        <svg class="faq-chevron" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M5 8L10 13L15 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                    </button>
+                    <div class="faq-answer">
+                        <p>When you approach your monthly limit, we'll notify you via email and through the dashboard. You can upgrade your plan instantly to get more tokens, or purchase a one-time token pack as an add-on. We'll never cut you off mid-conversation — there's a small grace buffer to ensure smooth handoffs.</p>
+                    </div>
+                </div>
+                <div class="faq-item" id="faq-4">
+                    <button class="faq-question" aria-expanded="false">
+                        <span>Can I switch plans anytime?</span>
+                        <svg class="faq-chevron" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M5 8L10 13L15 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Absolutely. Upgrade or downgrade at any time from your dashboard. Upgrades take effect immediately with prorated billing. Downgrades take effect at the start of your next billing cycle. You can cancel anytime with no penalties.</p>
+                    </div>
+                </div>
+                <div class="faq-item" id="faq-5">
+                    <button class="faq-question" aria-expanded="false">
+                        <span>Can I use AIKompute in production?</span>
+                        <svg class="faq-chevron" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M5 8L10 13L15 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Absolutely. AIKompute is built as a commercial-grade, multi-tenant platform designed for production workloads. We offer 99.9% uptime SLA, intelligent failover, rate limiting, and detailed usage analytics through your dashboard.</p>
+                    </div>
+                </div>
+                <div class="faq-item" id="faq-6">
+                    <button class="faq-question" aria-expanded="false">
+                        <span>Is there a free trial?</span>
+                        <svg class="faq-chevron" width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M5 8L10 13L15 8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Yes! Our Free tier is free forever with 100K tokens per month — no credit card required. For Developer and Team plans, you get a 14-day free trial with the full plan limits. Cancel anytime during the trial and pay nothing.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======================== CTA FOOTER ======================== -->
+    <section class="cta-section" id="cta-section">
+        <div class="container">
+            <div class="cta-box">
+                <div class="cta-glow"></div>
+                <h2>Ready to build with <span class="gradient-text">every frontier model</span>?</h2>
+                <p>Join developers who are shipping faster and spending less. Start with our free tier — no credit card needed.</p>
+                <div class="cta-actions">
+                    <a href="https://aikompute.com/signup" class="btn-hero-primary" id="footer-cta-primary">
+                        Start Building Free
+                        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                    </a>
+                    <a href="mailto:hello@aikompute.com" class="btn-hero-ghost" id="footer-cta-contact">Contact Sales</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======================== FOOTER ======================== -->
+    <footer class="footer" id="footer">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a href="#" class="nav-logo">
+                        <div class="logo-mark">
+                            <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+                                <path d="M14 2L26 8V20L14 26L2 20V8L14 2Z" stroke="url(#logoGrad2)" stroke-width="2" fill="none"/>
+                                <path d="M14 10L20 13V19L14 22L8 19V13L14 10Z" fill="url(#logoGrad2)"/>
+                                <defs><linearGradient id="logoGrad2" x1="2" y1="2" x2="26" y2="26"><stop stop-color="#818cf8"/><stop offset="1" stop-color="#6366f1"/></linearGradient></defs>
+                            </svg>
+                        </div>
+                        <span>AIKompute</span>
+                    </a>
+                    <p class="footer-tagline">Unified AI inference at a fraction of the cost.</p>
+                </div>
+                <div class="footer-col">
+                    <h4>Product</h4>
+                    <ul>
+                        <li><a href="#features">Features</a></li>
+                        <li><a href="#models">Models</a></li>
+                        <li><a href="#pricing">Pricing</a></li>
+                        <li><a href="https://aikompute.com/login">Dashboard</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Developers</h4>
+                    <ul>
+                        <li><a href="docs/getting_started.md">Getting Started</a></li>
+                        <li><a href="docs/api_reference.md">API Reference</a></li>
+                        <li><a href="docs/use_cases.md">Use Cases</a></li>
+                        <li><a href="docs/faq.md">FAQ</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="mailto:hello@aikompute.com">Contact</a></li>
+                        <li><a href="docs/support_and_help.md">Support</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 AIKompute. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script-subscription.js"></script>
+</body>
+</html>

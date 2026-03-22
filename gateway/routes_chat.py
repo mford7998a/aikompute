@@ -34,7 +34,7 @@ from billing import (
     record_usage,
 )
 from database import get_db
-from proxy import proxy, resolve_provider, AUTO_ROUTE_ORDER
+from proxy import proxy, resolve_provider, resolve_fallback_providers, AUTO_ROUTE_ORDER
 from rate_limiter import check_rate_limit, record_token_usage
 
 router = APIRouter()
@@ -117,10 +117,8 @@ async def chat_completions(
         providers_to_try = AUTO_ROUTE_ORDER
     else:
         provider_type = resolve_provider(request.model)
-        # Build fallback list: requested provider first, then alternatives
-        providers_to_try = [provider_type] + [
-            p for p in AUTO_ROUTE_ORDER if p != provider_type
-        ]
+        # Only fallback to providers that can serve the SAME model
+        providers_to_try = resolve_fallback_providers(request.model)
 
     # -- 4. Pre-charge estimate (to prevent usage without payment) --
     estimated_output = request.max_tokens or 1000
@@ -494,6 +492,26 @@ async def list_models(user: dict = Depends(verify_api_key)):
         {"id": "copilot-o4-mini",       "object": "model", "owned_by": "github-copilot"},
         {"id": "copilot-claude-sonnet", "object": "model", "owned_by": "github-copilot"},
         {"id": "copilot-claude-haiku",  "object": "model", "owned_by": "github-copilot"},
+        # ── OpenRouter (free tier) ───────────────────────────────────────
+        {"id": "or-gemma-3-27b",        "object": "model", "owned_by": "openrouter"},
+        {"id": "or-gemma-3-12b",        "object": "model", "owned_by": "openrouter"},
+        {"id": "or-gemma-3-4b",         "object": "model", "owned_by": "openrouter"},
+        {"id": "or-gemma-3n-e4b",       "object": "model", "owned_by": "openrouter"},
+        {"id": "or-gemma-3n-e2b",       "object": "model", "owned_by": "openrouter"},
+        {"id": "or-llama-3.3-70b",      "object": "model", "owned_by": "openrouter"},
+        {"id": "or-llama-3.2-3b",       "object": "model", "owned_by": "openrouter"},
+        {"id": "or-hermes-3-405b",      "object": "model", "owned_by": "openrouter"},
+        {"id": "or-mistral-small-3.1",  "object": "model", "owned_by": "openrouter"},
+        {"id": "or-qwen3-4b",           "object": "model", "owned_by": "openrouter"},
+        {"id": "or-nemotron-3-super",   "object": "model", "owned_by": "openrouter"},
+        {"id": "or-nemotron-3-nano",    "object": "model", "owned_by": "openrouter"},
+        {"id": "or-minimax-m2.5",       "object": "model", "owned_by": "openrouter"},
+        {"id": "or-step-3.5-flash",     "object": "model", "owned_by": "openrouter"},
+        {"id": "or-trinity-large",      "object": "model", "owned_by": "openrouter"},
+        {"id": "or-trinity-mini",       "object": "model", "owned_by": "openrouter"},
+        {"id": "or-glm-4.5-air",        "object": "model", "owned_by": "openrouter"},
+        {"id": "or-lfm-2.5-thinking",   "object": "model", "owned_by": "openrouter"},
+        {"id": "or-lfm-2.5-instruct",   "object": "model", "owned_by": "openrouter"},
         # ── WebAI (browser-based) ─────────────────────────────────────────
         {"id": "trae-gpt-4o",          "object": "model", "owned_by": "inference-gateway"},
         {"id": "marscode-gpt-4o",      "object": "model", "owned_by": "inference-gateway"},

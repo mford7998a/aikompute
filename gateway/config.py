@@ -36,6 +36,12 @@ class Settings(BaseSettings):
     # Run: docker exec -it copilot-api npx copilot-api start (then follow the auth link)
     COPILOT_API_BASE_URL: str = "http://localhost:4141"
 
+    # OpenRouter — free-tier models via rotating API keys
+    # Comma-separated list of API keys for account pooling.
+    # Get keys at https://openrouter.ai/keys
+    OPENROUTER_API_KEYS: str = ""
+    OPENROUTER_BASE_URL: str = "https://openrouter.ai/api"
+
     # Stripe (optional)
     STRIPE_SECRET_KEY: Optional[str] = None
     STRIPE_WEBHOOK_SECRET: Optional[str] = None

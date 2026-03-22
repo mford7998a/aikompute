@@ -4,7 +4,7 @@
 
 const API_BASE = window.location.hostname === 'localhost'
     ? 'http://localhost:4000'
-    : `${window.location.protocol}//${window.location.hostname}/v1`;
+    : `${window.location.protocol}//${window.location.host}`;
 
 let jwtToken = localStorage.getItem('admin_token');
 let adminUser = null;

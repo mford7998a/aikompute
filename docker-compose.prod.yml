@@ -79,6 +79,33 @@ services:
     networks:
       - inference-net
 
+  webai2api:
+    build:
+      context: ./WebAI2API
+    container_name: webai2api
+    expose:
+      - "3000"
+    volumes:
+      - ./WebAI2API/data:/app/data
+      - ./WebAI2API/config.yaml:/app/data/config.yaml
+    restart: always
+    networks:
+      - inference-net
+
+  antigravity2api:
+    image: ghcr.io/liuw1535/antigravity2api-nodejs:latest
+    container_name: antigravity2api
+    expose:
+      - "8045"
+    volumes:
+      - ./antigravity2api-nodejs/data:/app/data
+      - ./antigravity2api-nodejs/public/images:/app/public/images
+      - ./antigravity2api-nodejs/config.json:/app/config.json
+      - ./antigravity2api-nodejs/.env:/app/.env
+    restart: always
+    networks:
+      - inference-net
+
   # ============================================
   # PostgreSQL
   # ============================================
@@ -135,6 +162,8 @@ services:
       - WEBAI2API_KEY=sk-webai-default-key-123
       - GITHUB_TOKEN=${GITHUB_TOKEN:-}
       - COPILOT_API_BASE_URL=http://copilot-api:4141
+      - OPENROUTER_API_KEYS=${OPENROUTER_API_KEYS:-}
+      - OPENROUTER_BASE_URL=https://openrouter.ai/api
       - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY:-}
       - STRIPE_WEBHOOK_SECRET=${STRIPE_WEBHOOK_SECRET:-}
       - MASTER_API_KEY=${MASTER_API_KEY}
