@@ -284,34 +284,26 @@ async def _handle_streaming(
                 await record_provider_success(provider)
                 break # Exit the loop if a provider succeeded
                 
-            except httpx.TimeoutException:
-                last_error_message = f"Stream timed out with {provider}"
-                await record_provider_failure(provider)
-                if has_yielded:
-                    # If we started yielding, but then timed out, we can't fallback.
-                    # Raise an HTTPException to terminate the stream gracefully.
-                    raise HTTPException(status_code=504, detail=f"Stream timed out mid-generation with {provider}")
-                # Otherwise, try next provider
-                continue
-            except httpx.ConnectError:
-                last_error_message = f"Cannot connect to {provider}"
-                await record_provider_failure(provider)
-                if has_yielded:
-                    raise HTTPException(status_code=502, detail=f"Connection to {provider} broke mid-generation")
-                # Otherwise, try next provider
-                continue
             except HTTPException as e:
                 last_error_message = f"Upstream error from {provider}: {e.detail}"
                 await record_provider_failure(provider)
                 if has_yielded:
-                    raise # Re-raise if already streaming
+                    import json
+                    err_json = {"error": {"message": f"Connection to {provider} broke mid-generation: {e.detail}"}}
+                    yield f'data: {json.dumps(err_json)}\n\n'
+                    yield "data: [DONE]\n\n"
+                    break
                 # Otherwise, try next provider
                 continue
             except Exception as e:
                 last_error_message = f"Unexpected error from {provider}: {str(e)}"
                 await record_provider_failure(provider)
                 if has_yielded:
-                    raise HTTPException(status_code=500, detail=f"Stream broken mid-generation with {provider}: {str(e)}")
+                    import json
+                    err_json = {"error": {"message": f"Stream broken mid-generation with {provider}: {str(e)}"}}
+                    yield f'data: {json.dumps(err_json)}\n\n'
+                    yield "data: [DONE]\n\n"
+                    break
                 # Otherwise, try next provider
                 continue
         else:
