@@ -66,6 +66,8 @@ To help you get started with your favorite AI tool, we've created specific, deta
 ### Popular AI Agents
 - **[Roo Code Setup Guide](guide_roo_code.md)**
 - **[Cline Setup Guide](guide_cline.md)**
+- **[OpenClaw Setup Guide](guide_openclaw.md)**
+- **[Kilo Code Setup Guide](guide_kilocode.md)**
 - **[Aider CLI Guide](guide_aider.md)**
 - **[OpenCode Guide](guide_opencode.md)**
 - **[Claude Code & Native CLIs](guide_native_clis.md)**
