@@ -79,18 +79,6 @@ services:
     networks:
       - inference-net
 
-  webai2api:
-    build:
-      context: ./WebAI2API
-    container_name: webai2api
-    expose:
-      - "3000"
-    volumes:
-      - ./WebAI2API/data:/app/data
-      - ./WebAI2API/config.yaml:/app/data/config.yaml
-    restart: always
-    networks:
-      - inference-net
 
   antigravity2api:
     image: ghcr.io/liuw1535/antigravity2api-nodejs:latest
