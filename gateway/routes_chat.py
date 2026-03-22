@@ -246,71 +246,50 @@ async def _handle_streaming(
 
     async def stream_with_billing():
         accumulated_text = ""
-        last_error_message = ""
-        ranked_providers = await proxy.best_available_providers(providers_to_try)
-        
-        for provider in ranked_providers:
-            has_yielded = False
-            try:
-                async for chunk in proxy.chat_completion_stream(
-                    model=request.model,
-                    messages=messages_dicts,
-                    provider_type=provider,
-                    temperature=request.temperature,
-                    max_tokens=request.max_tokens,
-                    top_p=request.top_p,
-                    frequency_penalty=request.frequency_penalty,
-                    presence_penalty=request.presence_penalty,
-                    stop=request.stop,
-                ):
-                    has_yielded = True
-                    # Accumulate text for post-stream billing
-                    if chunk.startswith("data: ") and chunk.strip() != "data: [DONE]":
-                        try:
-                            import json
-                            data = json.loads(chunk[6:])
-                            choices = data.get("choices", [])
-                            if choices:
-                                delta = choices[0].get("delta", {})
-                                content = delta.get("content", "")
-                                if content:
-                                    accumulated_text += content
-                        except (json.JSONDecodeError, KeyError):
-                            pass
+        last_error = ""
+        success = False
 
-                    yield chunk
-                
-                # If we successfully completed the generator without throwing on connect
-                await record_provider_success(provider)
-                break # Exit the loop if a provider succeeded
-                
-            except HTTPException as e:
-                last_error_message = f"Upstream error from {provider}: {e.detail}"
-                await record_provider_failure(provider)
-                if has_yielded:
-                    import json
-                    err_json = {"error": {"message": f"Connection to {provider} broke mid-generation: {e.detail}"}}
-                    yield f'data: {json.dumps(err_json)}\n\n'
-                    yield "data: [DONE]\n\n"
-                    break
-                # Otherwise, try next provider
-                continue
-            except Exception as e:
-                last_error_message = f"Unexpected error from {provider}: {str(e)}"
-                await record_provider_failure(provider)
-                if has_yielded:
-                    import json
-                    err_json = {"error": {"message": f"Stream broken mid-generation with {provider}: {str(e)}"}}
-                    yield f'data: {json.dumps(err_json)}\n\n'
-                    yield "data: [DONE]\n\n"
-                    break
-                # Otherwise, try next provider
-                continue
-        else:
-            # For-else triggers if NO provider succeeded
-            err_msg = last_error_message.replace('"', "'")
-            yield f'data: {{"error": {{"message": "All fallback providers exhausted. {err_msg}"}}}}\n\n'
-            yield "data: [DONE]\n\n"
+        try:
+            for provider in providers_to_try:
+                try:
+                    async for chunk in proxy.chat_completion_stream(
+                        model=request.model,
+                        messages=messages_dicts,
+                        provider_type=provider,
+                        temperature=request.temperature,
+                        max_tokens=request.max_tokens,
+                        top_p=request.top_p,
+                        frequency_penalty=request.frequency_penalty,
+                        presence_penalty=request.presence_penalty,
+                        stop=request.stop,
+                    ):
+                        # Accumulate text for post-stream billing
+                        if chunk.startswith("data: ") and chunk.strip() != "data: [DONE]":
+                            try:
+                                import json
+                                data = json.loads(chunk[6:])
+                                choices = data.get("choices", [])
+                                if choices:
+                                    delta = choices[0].get("delta", {})
+                                    content = delta.get("content", "")
+                                    if content:
+                                        accumulated_text += content
+                            except (json.JSONDecodeError, KeyError):
+                                pass
+
+                        yield chunk
+
+                    success = True
+                    break  # Provider worked, exit the loop
+
+                except Exception as e:
+                    last_error = str(e)
+                    continue  # Try next provider
+
+            if not success:
+                safe_err = last_error.replace('"', "'")
+                yield f'data: {{"error": {{"message": "All providers failed. Last error: {safe_err}"}}}}\n\n'
+                yield "data: [DONE]\n\n"
 
         finally:
             # Bill after stream completes

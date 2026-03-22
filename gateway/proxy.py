@@ -583,9 +583,10 @@ class AIClient2APIProxy:
         Also accumulates text for post-stream token counting.
         """
         url = self._build_url(provider_type)
+        upstream_model = self._translate_model_for_provider(model, provider_type)
 
         payload = {
-            "model": model,
+            "model": upstream_model,
             "messages": messages,
             "temperature": temperature,
             "stream": True,
