@@ -64,16 +64,16 @@ MODEL_TO_PROVIDER = {
     "gemini-2.5-computer-use-preview-10-2025": "gemini-antigravity",
 
 
-    # Claude models → Kiro first (AG is the fallback in config.json/proxy logic)
+    # ALL Claude models → Antigravity primary, Kiro as fallback
     "claude-sonnet-4-6": "gemini-antigravity",
     "claude-opus-4-6": "gemini-antigravity",
-    "claude-sonnet-4-5": "claude-kiro-oauth",
-    "claude-sonnet-4": "claude-kiro-oauth",
-    "claude-opus-4-5": "claude-kiro-oauth",
-    "claude-opus-4": "claude-kiro-oauth",
-    "claude-haiku-3-5": "claude-kiro-oauth",
-    "kiro-claude-opus-4-5-thinking": "claude-kiro-oauth",
-    "kiro-claude-sonnet-4-5": "claude-kiro-oauth",
+    "claude-sonnet-4-5": "gemini-antigravity",
+    "claude-sonnet-4": "gemini-antigravity",
+    "claude-opus-4-5": "gemini-antigravity",
+    "claude-opus-4": "gemini-antigravity",
+    "claude-haiku-3-5": "gemini-antigravity",
+    "kiro-claude-opus-4-5-thinking": "gemini-antigravity",
+    "kiro-claude-sonnet-4-5": "gemini-antigravity",
 
     # Qwen models → route through Qwen OAuth
     "qwen3-coder-plus": "openai-qwen-oauth",
@@ -187,18 +187,18 @@ MODEL_PROVIDERS = {
     "gemini-flash":          ["gemini-antigravity", "gemini-cli-oauth"],
     "gemini-2.5-computer-use-preview-10-2025": ["gemini-antigravity", "gemini-cli-oauth"],
 
-    # Claude 4.6 — Antigravity primary, Kiro (aiclient2api) as fallback
+    # Claude 4.6 — Antigravity primary, Kiro fallback
     "claude-sonnet-4-6":     ["gemini-antigravity", "claude-kiro-oauth"],
     "claude-opus-4-6":       ["gemini-antigravity", "claude-kiro-oauth"],
 
-    # Claude 4.5/4.0 — Kiro is primary
-    "claude-sonnet-4-5":     ["claude-kiro-oauth"],
-    "claude-opus-4-5":       ["claude-kiro-oauth"],
-    "claude-sonnet-4":       ["claude-kiro-oauth"],
-    "claude-opus-4":         ["claude-kiro-oauth"],
-    "claude-haiku-3-5":      ["claude-kiro-oauth"],
-    "kiro-claude-opus-4-5-thinking": ["claude-kiro-oauth"],
-    "kiro-claude-sonnet-4-5": ["claude-kiro-oauth"],
+    # Claude 4.5/4.0 — Antigravity primary, Kiro fallback
+    "claude-sonnet-4-5":     ["gemini-antigravity", "claude-kiro-oauth"],
+    "claude-opus-4-5":       ["gemini-antigravity", "claude-kiro-oauth"],
+    "claude-sonnet-4":       ["gemini-antigravity", "claude-kiro-oauth"],
+    "claude-opus-4":         ["gemini-antigravity", "claude-kiro-oauth"],
+    "claude-haiku-3-5":      ["gemini-antigravity", "claude-kiro-oauth"],
+    "kiro-claude-opus-4-5-thinking": ["gemini-antigravity", "claude-kiro-oauth"],
+    "kiro-claude-sonnet-4-5": ["gemini-antigravity", "claude-kiro-oauth"],
 
     # Qwen
     "qwen3-coder-plus":      ["openai-qwen-oauth"],
