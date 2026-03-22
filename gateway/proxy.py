@@ -447,28 +447,34 @@ class AIClient2APIProxy:
         if provider_type == "openrouter":
             return OPENROUTER_MODEL_MAP.get(model, model)
             
-        # 2. Antigravity translates Claude aliases to Gemini equivalents internally
+        # 2. Antigravity handles Claude natively now
         if provider_type == "gemini-antigravity":
-            if model in ["claude-sonnet-4-6", "claude-opus-4-6"]:
-                return "gemini-2.5-pro"  # Antigravity proxies Claude aliases to Pro
             if model == "gemini-2.5-computer-use-preview-10-2025":
                 return "gemini-2.5-pro"
                 
-        # 3. Gemini CLI only takes exact gemini names
+        # 3. Gemini CLI takes gemini names
         if provider_type == "gemini-cli-oauth":
-            if model in ["gemini-pro", "gemini-2.5-pro", "gemini-3.0-pro", "gemini-3.1-pro-high", "gemini-3.1-pro-low", "claude-sonnet-4-6", "claude-opus-4-6"]:
+            if model in ["gemini-pro", "gemini-2.5-pro", "gemini-3.0-pro", "gemini-3.1-pro-high", "gemini-3.1-pro-low"]:
                 return "gemini-2.5-pro"
             if model in ["gemini-flash", "gemini-3.5-flash", "gemini-3.0-flash"]:
                 return "gemini-2.5-flash"
 
         # 4. Kiro ONLY accepts strict official Claude IDs
         if provider_type == "claude-kiro-oauth":
-            if "sonnet" in model:
+            if model == "claude-sonnet-4-6":
+                return "claude-sonnet-4-6"
+            elif model == "claude-opus-4-6":
+                return "claude-opus-4-6"
+            elif model == "claude-sonnet-4-5" or model == "claude-sonnet-4" or model == "kiro-claude-sonnet-4-5":
+                return "claude-sonnet-4-5-20250929"
+            elif model == "claude-opus-4-5" or model == "claude-opus-4" or model == "kiro-claude-opus-4-5-thinking":
+                return "claude-opus-4-5-20251101"
+            elif model == "claude-haiku-4-5" or model == "claude-haiku-3-5" or "haiku" in model:
+                return "claude-haiku-4-5-20251015"
+            elif "sonnet" in model:
                 return "claude-3-5-sonnet-20241022"
-            if "opus" in model:
+            elif "opus" in model:
                 return "claude-3-opus-20240229"
-            if "haiku" in model:
-                return "claude-3-5-haiku-20241022"
                 
         return model
 
