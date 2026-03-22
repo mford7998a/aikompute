@@ -34,7 +34,6 @@ These microservices take standard OpenAI-formatted requests and translate them i
 - **Antigravity2API**: Specialized proxy optimized for Antigravity, primarily used to supply **Google Gemini** models.
 - **AIClient2API (incorporating Kiro)**: The primary engine translating OAuth protocols, critically utilizing Amazon Kiro to supply **Claude** models, as well as handling Qwen and Gemini CLI. 
 - **Copilot-API**: Leverages GitHub Copilot authentication to act as an OpenAI/Anthropic proxy.
-- **WebAI2API**: Handles browser-automation driven integrations (e.g., Trae, MarsCode).
 
 
 ## 4. Key Goals for Future Development (Agent Directives)
@@ -81,10 +80,6 @@ When specific pools run dry, or for offering direct OpenAI models, the system le
 **6. GitHub Copilot Proxy (`copilot-api`) - Primary for OpenAI (GPT-4o)**
 - Authenticates using a GitHub Copilot subscription via `ericc-ch/copilot-api` to act as an OpenAI/Anthropic proxy.
 - **Models Provided**: `copilot-gpt-4o`, `copilot-claude-sonnet`, `copilot-o4-mini`
-
-**7. WebAI2API (`webai2api`) - Browser Automation Proxies**
-- Routes using cloud IDEs like Trae or MarsCode via browser automation.
-- **Models Provided**: `trae-gpt-4o`, `marscode-gpt-4o`
 
 ### C. Complete Fallback Chain (Circuit Breaker)
 When a user requests a generic `"auto"` model or a model fails across its primary provider, the Circuit Breaker iterates through this priority queue:

@@ -20,18 +20,7 @@ services:
     networks:
       - inference-net
 
-  webai2api:
-    build:
-      context: ./WebAI2API
-    container_name: webai2api
-    ports:
-      - "3002:3000"
-    volumes:
-      - ./WebAI2API/data:/app/data
-      - ./WebAI2API/config.yaml:/app/data/config.yaml
-    restart: always
-    networks:
-      - inference-net
+
   # Antigravity-2-API: Specialized Antigravity Proxy
   # Handles ProjectId generation, system message merging,
   # and thinking model optimizations.
@@ -121,8 +110,7 @@ services:
       - AICLIENT2API_KEY=${AICLIENT2API_KEY:-PLACEHOLDER_KEY}
       - ANTIGRAVITY2API_BASE_URL=http://antigravity2api:8045
       - ANTIGRAVITY2API_KEY=${ANTIGRAVITY2API_KEY:-PLACEHOLDER_KEY}
-      - WEBAI2API_BASE_URL=http://webai2api:3000
-      - WEBAI2API_KEY=sk-webai-default-key-123
+
       - GITHUB_TOKEN=${GITHUB_TOKEN:-}
       - COPILOT_API_BASE_URL=http://copilot-api:4141
       - STRIPE_SECRET_KEY=${STRIPE_SECRET_KEY:-}

@@ -513,8 +513,7 @@ async def list_models(user: dict = Depends(verify_api_key)):
         {"id": "or-lfm-2.5-thinking",   "object": "model", "owned_by": "openrouter"},
         {"id": "or-lfm-2.5-instruct",   "object": "model", "owned_by": "openrouter"},
         # ── WebAI (browser-based) ─────────────────────────────────────────
-        {"id": "trae-gpt-4o",          "object": "model", "owned_by": "inference-gateway"},
-        {"id": "marscode-gpt-4o",      "object": "model", "owned_by": "inference-gateway"},
+
         # ── Routing alias ─────────────────────────────────────────────────
         {"id": "auto",                 "object": "model", "owned_by": "inference-gateway"},
     ]

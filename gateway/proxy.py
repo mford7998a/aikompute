@@ -102,8 +102,7 @@ MODEL_TO_PROVIDER = {
     "gpt-4o": "openai-iflow",
     "deepseek-v3": "openai-iflow",
     "deepseek-r1": "openai-iflow",
-    "trae-gpt-4o": "webai2api",
-    "marscode-gpt-4o": "webai2api",
+
 
     # OpenRouter free-tier models
     "or-gemma-3-27b":         "openrouter",
@@ -226,8 +225,7 @@ MODEL_PROVIDERS = {
     "gpt-4o":                ["openai-iflow"],
     "deepseek-v3":           ["openai-iflow"],
     "deepseek-r1":           ["openai-iflow"],
-    "trae-gpt-4o":           ["webai2api"],
-    "marscode-gpt-4o":       ["webai2api"],
+
 
     # OpenRouter free-tier (each model only available via openrouter)
     "or-gemma-3-27b":        ["openrouter"],
@@ -289,7 +287,7 @@ PROVIDER_LABELS = {
     "openai-custom": "Standard API",
     "claude-custom": "Standard API",
     "openai-iflow": "Standard API",
-    "webai2api": "Standard API",
+
     "github-models": "GitHub Models",
     "copilot-api": "GitHub Copilot",
     "openrouter": "OpenRouter",
@@ -306,7 +304,7 @@ AUTO_ROUTE_ORDER = [
     "openrouter",        # free OpenRouter models
     "openai-custom",
     "openai-iflow",
-    "webai2api",
+
     "claude-custom",
 ]
 
@@ -366,9 +364,7 @@ class AIClient2APIProxy:
         # Antigravity specific backend
         self.ag_base_url = settings.ANTIGRAVITY2API_BASE_URL.rstrip("/")
         self.ag_api_key = settings.ANTIGRAVITY2API_KEY
-        # WebAI2API specific backend (Trae/MarsCode)
-        self.webai_base_url = settings.WEBAI2API_BASE_URL.rstrip("/")
-        self.webai_api_key = settings.WEBAI2API_KEY
+
         # GitHub Models backend (free inference API via GitHub PAT)
         self.github_models_url = "https://models.inference.ai.azure.com"
         self.github_token = settings.GITHUB_TOKEN
@@ -397,8 +393,7 @@ class AIClient2APIProxy:
         """
         if provider_type == "gemini-antigravity":
             return f"{self.ag_base_url}{path}"
-        elif provider_type == "webai2api":
-            return f"{self.webai_base_url}{path}"
+
         elif provider_type == "github-models":
             # GitHub Models uses the standard /v1/chat/completions path
             return f"{self.github_models_url}/v1/chat/completions"
@@ -414,8 +409,7 @@ class AIClient2APIProxy:
     def _build_headers(self, provider_type: str = "generic") -> dict:
         if provider_type == "gemini-antigravity":
             key = self.ag_api_key
-        elif provider_type == "webai2api":
-            key = self.webai_api_key
+
         elif provider_type == "github-models":
             key = self.github_token
         elif provider_type == "copilot-api":

@@ -23,9 +23,6 @@ class Settings(BaseSettings):
     ANTIGRAVITY2API_KEY: str = "123456"
 
 
-    # WebAI2API upstream (specialized for Trae/MarsCode browser automation)
-    WEBAI2API_BASE_URL: str = "http://localhost:3002"
-    WEBAI2API_KEY: str = "sk-webai-default-key-123"
 
     # GitHub Models (free tier; requires a GitHub PAT with models:read scope)
     # Generate at https://github.com/settings/tokens
