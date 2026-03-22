@@ -174,7 +174,7 @@ OPENROUTER_MODEL_MAP = {
 # Used for same-model-only fallback.
 # ============================================
 MODEL_PROVIDERS = {
-    # Gemini models — Antigravity and Gemini CLI can both serve them
+    # Gemini models — Antigravity primary, Gemini CLI (aiclient2api) as fallback
     "gemini-2.0-flash":      ["gemini-antigravity", "gemini-cli-oauth"],
     "gemini-2.5-pro":        ["gemini-antigravity", "gemini-cli-oauth"],
     "gemini-2.5-flash":      ["gemini-antigravity", "gemini-cli-oauth"],
@@ -185,11 +185,11 @@ MODEL_PROVIDERS = {
     "gemini-3.5-flash":      ["gemini-antigravity", "gemini-cli-oauth"],
     "gemini-pro":            ["gemini-antigravity", "gemini-cli-oauth"],
     "gemini-flash":          ["gemini-antigravity", "gemini-cli-oauth"],
-    "gemini-2.5-computer-use-preview-10-2025": ["gemini-antigravity"],
+    "gemini-2.5-computer-use-preview-10-2025": ["gemini-antigravity", "gemini-cli-oauth"],
 
-    # Claude 4.6 — only Antigravity
-    "claude-sonnet-4-6":     ["gemini-antigravity"],
-    "claude-opus-4-6":       ["gemini-antigravity"],
+    # Claude 4.6 — Antigravity primary, Kiro (aiclient2api) as fallback
+    "claude-sonnet-4-6":     ["gemini-antigravity", "claude-kiro-oauth"],
+    "claude-opus-4-6":       ["gemini-antigravity", "claude-kiro-oauth"],
 
     # Claude 4.5/4.0 — Kiro is primary
     "claude-sonnet-4-5":     ["claude-kiro-oauth"],
