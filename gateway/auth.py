@@ -64,7 +64,10 @@ async def verify_api_key(
     Verify an API key from the Authorization header.
     Returns user info dict with user_id, api_key_id, rate limits.
     """
-    # Extract the key
+    # Extract the key from multiple possible sources:
+    # 1. HTTPBearer (Authorization: Bearer ...)
+    # 2. Raw Authorization header
+    # 3. x-api-key header (used by Anthropic-compatible clients like Roo Code)
     api_key = None
     if credentials:
         api_key = credentials.credentials
@@ -72,9 +75,11 @@ async def verify_api_key(
         auth_header = request.headers.get("Authorization", "")
         if auth_header.startswith("Bearer "):
             api_key = auth_header[7:]
+    if not api_key:
+        api_key = request.headers.get("x-api-key", "") or request.headers.get("X-Api-Key", "")
 
     if not api_key:
-        raise HTTPException(status_code=401, detail="Missing API key. Use Authorization: Bearer sk-inf-...")
+        raise HTTPException(status_code=401, detail="Missing API key. Use Authorization: Bearer sk-... or x-api-key header.")
 
     # Check if it's the master key
     if api_key == settings.MASTER_API_KEY:
