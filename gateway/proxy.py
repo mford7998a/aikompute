@@ -438,44 +438,24 @@ class AIClient2APIProxy:
         }
 
     def _translate_model_for_provider(self, model: str, provider_type: str) -> str:
-        """Translate gateway model alias to the real model ID expected by the upstream."""
-        # 1. GitHub/Copilot/OpenRouter maps
+        """Translate gateway model alias to the real model ID expected by the upstream.
+        
+        IMPORTANT: antigravity2api and aiclient2api handle model name translation
+        internally. We only translate for GitHub/Copilot/OpenRouter which use
+        prefixed model names (e.g. 'copilot-gpt-4o' → 'gpt-4o').
+        
+        We NEVER substitute one model for a different model.
+        claude-sonnet-4-6 must always stay claude-sonnet-4-6.
+        """
         if provider_type == "github-models":
             return GITHUB_MODEL_MAP.get(model, model)
         if provider_type == "copilot-api":
             return COPILOT_MODEL_MAP.get(model, model)
         if provider_type == "openrouter":
             return OPENROUTER_MODEL_MAP.get(model, model)
-            
-        # 2. Antigravity handles Claude natively now
-        if provider_type == "gemini-antigravity":
-            if model == "gemini-2.5-computer-use-preview-10-2025":
-                return "gemini-2.5-pro"
-                
-        # 3. Gemini CLI takes gemini names
-        if provider_type == "gemini-cli-oauth":
-            if model in ["gemini-pro", "gemini-2.5-pro", "gemini-3.0-pro", "gemini-3.1-pro-high", "gemini-3.1-pro-low"]:
-                return "gemini-2.5-pro"
-            if model in ["gemini-flash", "gemini-3.5-flash", "gemini-3.0-flash"]:
-                return "gemini-2.5-flash"
-
-        # 4. Kiro ONLY accepts strict official Claude IDs
-        if provider_type == "claude-kiro-oauth":
-            if model == "claude-sonnet-4-6":
-                return "claude-sonnet-4-6"
-            elif model == "claude-opus-4-6":
-                return "claude-opus-4-6"
-            elif model == "claude-sonnet-4-5" or model == "claude-sonnet-4" or model == "kiro-claude-sonnet-4-5":
-                return "claude-sonnet-4-5-20250929"
-            elif model == "claude-opus-4-5" or model == "claude-opus-4" or model == "kiro-claude-opus-4-5-thinking":
-                return "claude-opus-4-5-20251101"
-            elif model == "claude-haiku-4-5" or model == "claude-haiku-3-5" or "haiku" in model:
-                return "claude-haiku-4-5-20251015"
-            elif "sonnet" in model:
-                return "claude-3-5-sonnet-20241022"
-            elif "opus" in model:
-                return "claude-3-opus-20240229"
-                
+        
+        # All other providers (antigravity, aiclient2api/kiro, aiclient2api/gemini-cli, qwen)
+        # receive the exact model name as requested. They handle translation internally.
         return model
 
     async def chat_completion(
