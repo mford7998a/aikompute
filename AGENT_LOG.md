@@ -22,6 +22,15 @@ The system consists of:
 ## Change Log
 
 ### [2026-03-22] Agent Actions
+* **Landing Page Migration (`dashboard/index.html`, `dashboard/auth.html`, `dashboard/landing.css`, `dashboard/landing.js`, `nginx/app.conf`)**:
+  * Moved the "new landing page" into the primary `aikompute.com/` root by replacing `dashboard/index.html` with the contents of `landing/index.html`.
+  * Preserved the original dashboard functionality by renaming the old `dashboard/index.html` to `dashboard/auth.html`.
+  * Added specific Nginx proxy routes for `/login` and `/signup` that serve `auth.html` directly.
+  * Implemented route-awareness in `auth.html` (via a new `<script>` block) to automatically display the registration form when the visitor arrives via the `/signup` path.
+  * Renamed landing page assets to `landing.css` and `landing.js` within the `dashboard/` folder to prevent naming collisions with the dashboard's `styles.css` and `app.js`.
+  * Updated all hardcoded `https://aikompute.com/login` and `/signup` links in the landing page to use relative paths for better portability.
+
+### [2026-03-22] Agent Actions (Continued)
 * **Native Protocol Endpoints (`gateway/routes_native.py`, `gateway/main.py`, `nginx/app.conf`)**:
   * Added Native Anthropic Endpoint (`POST /v1/messages`) allowing tools like Roo Code to bypass OpenAI conversion entirely and send native JSON tool schemas directly to the upstream proxy.
   * Added Native Gemini Endpoints (`POST /v1beta/models/{model}:generateContent` and `streamGenerateContent`).

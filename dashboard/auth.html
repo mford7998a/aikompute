@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Inference Gateway — Dashboard</title>
+    <meta name="description" content="Manage your AI inference API keys, usage, and billing.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <!-- Auth Screen -->
+    <div id="auth-screen" class="auth-screen">
+        <div class="auth-card">
+            <div class="auth-logo">
+                <div class="logo-icon">⚡</div>
+                <h1>AI Inference Gateway</h1>
+                <p class="subtitle">Unified API for 12+ AI models with per-token billing</p>
+            </div>
+            <div id="login-form" class="auth-form">
+                <h2>Sign In</h2>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="login-email" placeholder="you@example.com" autocomplete="email">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password">
+                </div>
+                <button onclick="login()" class="btn btn-primary btn-full">Sign In</button>
+                <div class="auth-switch">
+                    Don't have an account? <a onclick="showRegister()">Register</a><br><br>
+                    <a href="admin.html" style="font-size: 0.75rem; opacity: 0.6;">Admin Portal</a>
+                </div>
+            </div>
+            <div id="register-form" class="auth-form" style="display:none">
+                <h2>Create Account</h2>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="reg-email" placeholder="you@example.com">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="reg-password" placeholder="Min 8 characters">
+                </div>
+                <div class="form-group">
+                    <label>Display Name</label>
+                    <input type="text" id="reg-name" placeholder="Your name">
+                </div>
+                <button onclick="register()" class="btn btn-primary btn-full">Create Account</button>
+                <p class="auth-switch">Already have an account? <a onclick="showLogin()">Sign in</a></p>
+            </div>
+            <div id="api-key-reveal" class="api-key-reveal" style="display:none">
+                <div class="alert alert-success">
+                    <h3>🎉 Account Created!</h3>
+                    <p>Your API key (save it now — it won't be shown again):</p>
+                    <div class="api-key-box">
+                        <code id="new-api-key"></code>
+                        <button onclick="copyKey()" class="btn btn-sm">Copy</button>
+                    </div>
+                    <button onclick="proceedToDashboard()" class="btn btn-primary" style="margin-top:1rem">Continue to
+                        Dashboard →</button>
+                </div>
+            </div>
+            <div id="auth-error" class="alert alert-error" style="display:none"></div>
+        </div>
+    </div>
+
+    <!-- Dashboard -->
+    <div id="dashboard" class="dashboard" style="display:none">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo-icon small">⚡</div>
+                <span>AI Gateway</span>
+            </div>
+            <ul class="nav-links">
+                <li><a onclick="showTab('overview')" class="nav-link active" data-tab="overview">📊 Overview</a></li>
+                <li><a onclick="showTab('keys')" class="nav-link" data-tab="keys">🔑 API Keys</a></li>
+                <li><a onclick="showTab('usage')" class="nav-link" data-tab="usage">📈 Usage</a></li>
+                <li><a onclick="showTab('billing')" class="nav-link" data-tab="billing">💳 Billing</a></li>
+                <li><a onclick="showTab('docs')" class="nav-link" data-tab="docs">📚 API Docs</a></li>
+            </ul>
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <span id="user-email"></span>
+                </div>
+                <button onclick="logout()" class="btn btn-sm btn-ghost">Sign Out</button>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Overview Tab -->
+            <section id="tab-overview" class="tab-content active">
+                <div class="page-header">
+                    <h1>Dashboard</h1>
+                    <div class="balance-badge">
+                        <span class="balance-label">Credits</span>
+                        <span id="balance-display" class="balance-amount">—</span>
+                    </div>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-card gradient-blue">
+                        <div class="stat-icon">🪙</div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="stat-balance">—</div>
+                            <div class="stat-label">Credit Balance</div>
+                        </div>
+                    </div>
+                    <div class="stat-card gradient-purple">
+                        <div class="stat-icon">📨</div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="stat-requests">—</div>
+                            <div class="stat-label">Requests (30d)</div>
+                        </div>
+                    </div>
+                    <div class="stat-card gradient-green">
+                        <div class="stat-icon">🔤</div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="stat-tokens">—</div>
+                            <div class="stat-label">Tokens Used (30d)</div>
+                        </div>
+                    </div>
+                    <div class="stat-card gradient-orange">
+                        <div class="stat-icon">⚡</div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="stat-models">12+</div>
+                            <div class="stat-label">Available Models</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-top:2rem">
+                    <h2>Quick Start</h2>
+                    <div class="code-block">
+                        <pre><code>curl <span id="api-base-url"></span>/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -d '{
+    "model": "gemini-2.0-flash",
+    "messages": [{"role": "user", "content": "Hello!"}]
+  }'</code></pre>
+                    </div>
+                    <p style="margin-top:1rem; color: var(--text-dim)">
+                        Compatible with any OpenAI SDK. Just change the base URL and API key.
+                    </p>
+                </div>
+            </section>
+
+            <!-- API Keys Tab -->
+            <section id="tab-keys" class="tab-content">
+                <div class="page-header">
+                    <h1>API Keys</h1>
+                    <button onclick="createKey()" class="btn btn-primary">+ Create Key</button>
+                </div>
+                <div id="keys-list" class="keys-list"></div>
+            </section>
+
+            <!-- Usage Tab -->
+            <section id="tab-usage" class="tab-content">
+                <div class="page-header">
+                    <h1>Usage Analytics</h1>
+                </div>
+                <div id="usage-summary" class="usage-table-container"></div>
+                <h2 style="margin-top:2rem">Daily Breakdown</h2>
+                <div id="usage-daily" class="usage-table-container"></div>
+            </section>
+
+            <!-- Billing Tab -->
+            <section id="tab-billing" class="tab-content">
+                <div class="page-header">
+                    <h1>Buy Credits</h1>
+                </div>
+                <div id="packages-grid" class="packages-grid"></div>
+                <h2 style="margin-top:2rem">Transaction History</h2>
+                <div id="transactions-list" class="transactions-list"></div>
+            </section>
+
+            <!-- Docs Tab -->
+            <section id="tab-docs" class="tab-content">
+                <div class="page-header">
+                    <h1>API Reference</h1>
+                </div>
+                <div class="card">
+                    <h2>Base URL</h2>
+                    <code class="inline-code" id="docs-base-url"></code>
+
+                    <h2 style="margin-top:2rem">Authentication</h2>
+                    <p>Pass your API key in the <code class="inline-code">Authorization</code> header:</p>
+                    <div class="code-block">
+                        <pre><code>Authorization: Bearer sk-inf-your-key-here</code></pre>
+                    </div>
+
+                    <h2 style="margin-top:2rem">Available Models</h2>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Model Name</th>
+                                <th>Pricing (Input/Output per 1M)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>claude-opus*</td>
+                                <td><span class="badge paid">$7.50 / $37.50</span></td>
+                            </tr>
+                            <tr>
+                                <td>claude-sonnet*</td>
+                                <td><span class="badge paid">$1.50 / $7.50</span></td>
+                            </tr>
+                            <tr>
+                                <td>claude-haiku*</td>
+                                <td><span class="badge free">$0.12 / $0.62</span></td>
+                            </tr>
+                            <tr>
+                                <td>gemini-3.1-pro-high</td>
+                                <td><span class="badge paid">$0.62 / $2.50</span></td>
+                            </tr>
+                            <tr>
+                                <td>gemini-3.1-pro-low</td>
+                                <td><span class="badge free">$0.17 / $0.52</span></td>
+                            </tr>
+                            <tr>
+                                <td>gpt-4o</td>
+                                <td><span class="badge paid">$1.25 / $5.00</span></td>
+                            </tr>
+                            <tr>
+                                <td>deepseek-v3</td>
+                                <td><span class="badge free">$0.10 / $0.20</span></td>
+                            </tr>
+                            <tr>
+                                <td>deepseek-r1</td>
+                                <td><span class="badge free">$0.10 / $0.20</span></td>
+                            </tr>
+                            <tr>
+                                <td>gemini-3.0-flash</td>
+                                <td><span class="badge free">$0.05 / $0.20</span></td>
+                            </tr>
+                            <tr>
+                                <td>gemini-2.0-flash</td>
+                                <td><span class="badge free">$0.05 / $0.20</span></td>
+                            </tr>
+                            <tr>
+                                <td>qwen3-coder-plus</td>
+                                <td><span class="badge free">$0.10 / $0.30</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <h2 style="margin-top:2rem">Chat Completion</h2>
+                    <p><code class="inline-code">POST /v1/chat/completions</code></p>
+                    <div class="code-block">
+                        <pre><code>{
+  "model": "claude-sonnet-4-6",
+  "messages": [
+    {"role": "system", "content": "You are a helpful assistant."},
+    {"role": "user", "content": "Explain quantum computing"}
+  ],
+  "temperature": 0.7,
+  "max_tokens": 1000,
+  "stream": false
+}</code></pre>
+                    </div>
+
+                    <h2 style="margin-top:2rem">Python SDK Example</h2>
+                    <div class="code-block">
+                        <pre><code>from openai import OpenAI
+
+client = OpenAI(
+    api_key="sk-inf-your-key-here",
+    base_url="<span class="docs-url-placeholder"></span>/v1"
+)
+
+response = client.chat.completions.create(
+    model="gemini-3.0-pro",
+    messages=[{"role": "user", "content": "Hello!"}]
+)
+print(response.choices[0].message.content)</code></pre>
+                    </div>
+
+                    <h2 style="margin-top:2rem">Service Reliability</h2>
+                    <div class="card" style="background: var(--bg-secondary); border: 1px solid var(--border)">
+                        <p>Our gateway uses a multi-layered infrastructure to ensure 99.9% availability:
+                        </p>
+                        <ol style="margin: 1rem 0; padding-left: 1.5rem; color: var(--text-secondary)">
+                            <li>Requests are balanced across a distributed pool of processing nodes.</li>
+                            <li>If a node becomes busy or goes offline, our system instantly redirects your request to a
+                                healthy alternative.</li>
+                            <li>Integrated load-bearing ensures that even during high-traffic periods, your API calls
+                                remain responsive.</li>
+                            <li>Periodic health checks proactively monitor all nodes to guarantee consistent
+                                performance.</li>
+                        </ol>
+                        <p style="color: var(--text-dim)">This architecture provides a seamless experience without
+                            manual endpoint management.</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        // Route awareness for /signup
+        window.addEventListener('load', () => {
+            if (window.location.pathname === '/signup') {
+                if (typeof showRegister === 'function') {
+                    showRegister();
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>
