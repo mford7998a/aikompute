@@ -61,21 +61,29 @@ Replace `YOUR_API_KEY` with the key you generated in the previous step.
 
 ## 5. Agent & IDE Setup Guides
 
-To help you get started with your favorite AI agent tool, we've created specific, detailed guides for every major platform:
+To help you get started with your favorite AI tool, we've created specific, detailed guides for every major platform:
 
 ### Popular AI Agents
 - **[Roo Code Setup Guide](guide_roo_code.md)**
 - **[Cline Setup Guide](guide_cline.md)**
 - **[Aider CLI Guide](guide_aider.md)**
 - **[OpenCode Guide](guide_opencode.md)**
+- **[Claude Code & Native CLIs](guide_native_clis.md)**
 
-### AI-Native IDEs
+### AI-Native IDEs & Web Tools
 - **[Cursor Setup Guide](guide_cursor.md)**
 - **[Windsurf Setup Guide](guide_windsurf.md)**
+- **[Continue.dev Setup Guide](guide_continue_dev.md)**
+- **[Bolt.diy Setup Guide](guide_bolt_diy.md)**
+- **[Vercel SDK & Chat Guide](guide_chat_vercel.md)**
 - **[Trae / MarsCode Guide](guide_trae_marscode.md)**
 - **[Warp Terminal Guide](guide_warp.md)**
 
-### Generic Tools
+### Enterprise & Other Extensions
+- **[Codeium, Tabnine, Amazon Q Guide](guide_enterprise_extensions.md)**
+
+### No-Code & Automation
+- **[n8n, Make.com, Zapier Guide](guide_automation_tools.md)**
 - **[Generic Tools Guide (AnythingLLM, etc.)](guide_generic_tools.md)**
 
 ---
