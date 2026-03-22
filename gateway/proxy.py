@@ -439,12 +439,37 @@ class AIClient2APIProxy:
 
     def _translate_model_for_provider(self, model: str, provider_type: str) -> str:
         """Translate gateway model alias to the real model ID expected by the upstream."""
+        # 1. GitHub/Copilot/OpenRouter maps
         if provider_type == "github-models":
             return GITHUB_MODEL_MAP.get(model, model)
         if provider_type == "copilot-api":
             return COPILOT_MODEL_MAP.get(model, model)
         if provider_type == "openrouter":
             return OPENROUTER_MODEL_MAP.get(model, model)
+            
+        # 2. Antigravity translates Claude aliases to Gemini equivalents internally
+        if provider_type == "gemini-antigravity":
+            if model in ["claude-sonnet-4-6", "claude-opus-4-6"]:
+                return "gemini-2.5-pro"  # Antigravity proxies Claude aliases to Pro
+            if model == "gemini-2.5-computer-use-preview-10-2025":
+                return "gemini-2.5-pro"
+                
+        # 3. Gemini CLI only takes exact gemini names
+        if provider_type == "gemini-cli-oauth":
+            if model in ["gemini-pro", "gemini-2.5-pro", "gemini-3.0-pro", "gemini-3.1-pro-high", "gemini-3.1-pro-low", "claude-sonnet-4-6", "claude-opus-4-6"]:
+                return "gemini-2.5-pro"
+            if model in ["gemini-flash", "gemini-3.5-flash", "gemini-3.0-flash"]:
+                return "gemini-2.5-flash"
+
+        # 4. Kiro ONLY accepts strict official Claude IDs
+        if provider_type == "claude-kiro-oauth":
+            if "sonnet" in model:
+                return "claude-3-5-sonnet-20241022"
+            if "opus" in model:
+                return "claude-3-opus-20240229"
+            if "haiku" in model:
+                return "claude-3-5-haiku-20241022"
+                
         return model
 
     async def chat_completion(
