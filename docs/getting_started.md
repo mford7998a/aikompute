@@ -59,8 +59,20 @@ curl "https://api.aikompute.com/v1/chat/completions" \
 
 Replace `YOUR_API_KEY` with the key you generated in the previous step.
 
+## 5. Agent Setup Guides
+
+To help you get started with your favorite AI agent tool, we've created specific, detailed guides:
+
+- **[Roo Code Setup Guide](guide_roo_code.md)**
+- **[Cline Setup Guide](guide_cline.md)**
+- **[Cursor Setup Guide](guide_cursor.md)**
+- **[Generic Tools (AnythingLLM, etc.)](guide_generic_tools.md)**
+
+---
+
 ## Next Steps
 
 - Explore the [API Reference](api_reference.md) to see all supported endpoints and parameters.
 - Check out [Use Cases](use_cases.md) to get inspiration for your next project.
 - Read through the [Settings Management](settings_management.md) guide to learn how to manage your team and billing limits.
+- If you need help, check our [FAQ](faq.md) or [Support Page](support_and_help.md).
