@@ -246,33 +246,79 @@ async def _handle_streaming(
 
     async def stream_with_billing():
         accumulated_text = ""
-        try:
-            async for chunk in proxy.chat_completion_stream(
-                model=request.model,
-                messages=messages_dicts,
-                provider_type=providers_to_try[0],  # use primary for streaming
-                temperature=request.temperature,
-                max_tokens=request.max_tokens,
-                top_p=request.top_p,
-                frequency_penalty=request.frequency_penalty,
-                presence_penalty=request.presence_penalty,
-                stop=request.stop,
-            ):
-                # Accumulate text for post-stream billing
-                if chunk.startswith("data: ") and chunk.strip() != "data: [DONE]":
-                    try:
-                        import json
-                        data = json.loads(chunk[6:])
-                        choices = data.get("choices", [])
-                        if choices:
-                            delta = choices[0].get("delta", {})
-                            content = delta.get("content", "")
-                            if content:
-                                accumulated_text += content
-                    except (json.JSONDecodeError, KeyError):
-                        pass
+        last_error_message = ""
+        ranked_providers = await proxy.best_available_providers(providers_to_try)
+        
+        for provider in ranked_providers:
+            has_yielded = False
+            try:
+                async for chunk in proxy.chat_completion_stream(
+                    model=request.model,
+                    messages=messages_dicts,
+                    provider_type=provider,
+                    temperature=request.temperature,
+                    max_tokens=request.max_tokens,
+                    top_p=request.top_p,
+                    frequency_penalty=request.frequency_penalty,
+                    presence_penalty=request.presence_penalty,
+                    stop=request.stop,
+                ):
+                    has_yielded = True
+                    # Accumulate text for post-stream billing
+                    if chunk.startswith("data: ") and chunk.strip() != "data: [DONE]":
+                        try:
+                            import json
+                            data = json.loads(chunk[6:])
+                            choices = data.get("choices", [])
+                            if choices:
+                                delta = choices[0].get("delta", {})
+                                content = delta.get("content", "")
+                                if content:
+                                    accumulated_text += content
+                        except (json.JSONDecodeError, KeyError):
+                            pass
 
-                yield chunk
+                    yield chunk
+                
+                # If we successfully completed the generator without throwing on connect
+                await record_provider_success(provider)
+                break # Exit the loop if a provider succeeded
+                
+            except httpx.TimeoutException:
+                last_error_message = f"Stream timed out with {provider}"
+                await record_provider_failure(provider)
+                if has_yielded:
+                    # If we started yielding, but then timed out, we can't fallback.
+                    # Raise an HTTPException to terminate the stream gracefully.
+                    raise HTTPException(status_code=504, detail=f"Stream timed out mid-generation with {provider}")
+                # Otherwise, try next provider
+                continue
+            except httpx.ConnectError:
+                last_error_message = f"Cannot connect to {provider}"
+                await record_provider_failure(provider)
+                if has_yielded:
+                    raise HTTPException(status_code=502, detail=f"Connection to {provider} broke mid-generation")
+                # Otherwise, try next provider
+                continue
+            except HTTPException as e:
+                last_error_message = f"Upstream error from {provider}: {e.detail}"
+                await record_provider_failure(provider)
+                if has_yielded:
+                    raise # Re-raise if already streaming
+                # Otherwise, try next provider
+                continue
+            except Exception as e:
+                last_error_message = f"Unexpected error from {provider}: {str(e)}"
+                await record_provider_failure(provider)
+                if has_yielded:
+                    raise HTTPException(status_code=500, detail=f"Stream broken mid-generation with {provider}: {str(e)}")
+                # Otherwise, try next provider
+                continue
+        else:
+            # For-else triggers if NO provider succeeded
+            err_msg = last_error_message.replace('"', "'")
+            yield f'data: {{"error": {{"message": "All fallback providers exhausted. {err_msg}"}}}}\n\n'
+            yield "data: [DONE]\n\n"
 
         finally:
             # Bill after stream completes

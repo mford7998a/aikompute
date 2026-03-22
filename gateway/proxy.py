@@ -580,9 +580,7 @@ class AIClient2APIProxy:
                 if response.status_code != 200:
                     error_body = await response.aread()
                     error_msg = error_body.decode()[:500].replace('"', '\\"').replace('\n', ' ')
-                    yield f'data: {{"error": {{"message": "Upstream proxy returned {response.status_code}: {error_msg}"}}}}\n\n'
-                    yield "data: [DONE]\n\n"
-                    return
+                    raise HTTPException(status_code=response.status_code, detail=error_msg)
 
                 async for line in response.aiter_lines():
                     if not line:
@@ -611,9 +609,9 @@ class AIClient2APIProxy:
                             yield f"data: {data_str}\n\n"
 
         except httpx.TimeoutException:
-            yield f'data: {{"error": "Stream timed out"}}\n\n'
+            raise HTTPException(status_code=504, detail="Stream timed out")
         except httpx.ConnectError:
-            yield f'data: {{"error": "Cannot connect to backend"}}\n\n'
+            raise HTTPException(status_code=502, detail="Cannot connect to backend")
 
         # Store accumulated text for billing (accessed via _stream_text attribute)
         self._last_stream_text = accumulated_text
