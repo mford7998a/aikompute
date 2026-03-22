@@ -35,6 +35,12 @@ The system consists of:
   * Added stylized model chips for quick recognition of available frontier models.
   * Updated the Model Catalog table with the latest high-performance coding models (GPT 5.1 Codex, Claude 4.6, Gemini 3.1).
 
+* **Codex-LB & Open WebUI Integration (`docker-compose.prod.yml`, `nginx/app.conf`, `gateway/proxy.py`, `gateway/config.py`)**:
+  * Integrated `soju06/codex-lb` as a new account-pooling provider for the gateway.
+  * Added `Open WebUI` as a dedicated "Chat" service for personal use of the pooled resources.
+  * Configured Nginx subdomains: `codex.aikompute.com` (LB Admin) and `chat.aikompute.com` (WebUI Chat).
+  * Added `codex-` prefixed model routes in `proxy.py` to allow the gateway to consume rotating Copilot/Codex accounts.
+
 
 ### [2026-03-22] Agent Actions (Continued)
 * **Native Protocol Endpoints (`gateway/routes_native.py`, `gateway/main.py`, `nginx/app.conf`)**:

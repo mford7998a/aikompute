@@ -97,11 +97,20 @@ MODEL_TO_PROVIDER = {
     "copilot-claude-sonnet":    "copilot-api",
     "copilot-claude-haiku":     "copilot-api",
 
+    # Codex-LB — soju06/codex-lb proxy for account rotation
+    # Exposes Copilot/other accounts via 1455 OpenAI endpoint.
+    "codex-gpt-4o":             "codex-lb",
+    "codex-gpt-4.1":            "codex-lb",
+    "codex-o4-mini":            "codex-lb",
+    "codex-claude-sonnet":      "codex-lb",
+    "codex-claude-haiku":       "codex-lb",
+
+
     # Direct API models (paid keys)
-    "claude-3-5-sonnet": "claude-custom",
-    "gpt-4o": "openai-iflow",
-    "deepseek-v3": "openai-iflow",
-    "deepseek-r1": "openai-iflow",
+    "claude-3-5-sonnet":        "claude-custom",
+    "gpt-4o":                   "openai-iflow",
+    "deepseek-v3":              "openai-iflow",
+    "deepseek-r1":              "openai-iflow",
 
 
     # OpenRouter free-tier models
@@ -136,14 +145,14 @@ GITHUB_MODEL_MAP = {
     "github-deepseek-v3":     "deepseek-v3-0324",
 }
 
-# Copilot model name → actual model ID passed to copilot-api
-# copilot-api passes these straight to Copilot's backend.
-COPILOT_MODEL_MAP = {
-    "copilot-gpt-4o":        "gpt-4o",
-    "copilot-gpt-4.1":       "gpt-4.1",
-    "copilot-o4-mini":       "o4-mini",
-    "copilot-claude-sonnet": "claude-sonnet-4-5",
-    "copilot-claude-haiku":  "claude-haiku-3-5",
+# Codex model name → actual model ID passed to codex-lb
+# codex-lb passes these to its configured upstream providers.
+CODEX_MODEL_MAP = {
+    "codex-gpt-4o":        "gpt-4o",
+    "codex-gpt-4.1":       "gpt-4.1",
+    "codex-o4-mini":       "o4-mini",
+    "codex-claude-sonnet": "claude-sonnet-4.6",
+    "codex-claude-haiku":  "claude-haiku-3.5",
 }
 
 # OpenRouter model alias → actual OpenRouter model ID (with :free suffix)
@@ -220,6 +229,13 @@ MODEL_PROVIDERS = {
     "copilot-claude-sonnet": ["copilot-api"],
     "copilot-claude-haiku":  ["copilot-api"],
 
+    # Codex-LB
+    "codex-gpt-4o":        ["codex-lb"],
+    "codex-gpt-4.1":       ["codex-lb"],
+    "codex-o4-mini":       ["codex-lb"],
+    "codex-claude-sonnet": ["codex-lb"],
+    "codex-claude-haiku":  ["codex-lb"],
+
     # Direct paid
     "claude-3-5-sonnet":     ["claude-custom"],
     "gpt-4o":                ["openai-iflow"],
@@ -270,6 +286,8 @@ def resolve_fallback_providers(model: str) -> list:
         return ["github-models"]
     elif model_lower.startswith("copilot-"):
         return ["copilot-api"]
+    elif model_lower.startswith("codex-"):
+        return ["codex-lb"]
     elif model_lower.startswith("or-"):
         return ["openrouter"]
 
@@ -290,6 +308,7 @@ PROVIDER_LABELS = {
 
     "github-models": "GitHub Models",
     "copilot-api": "GitHub Copilot",
+    "codex-lb": "Codex LB",
     "openrouter": "OpenRouter",
 }
 
@@ -300,6 +319,7 @@ AUTO_ROUTE_ORDER = [
     "claude-kiro-oauth",
     "openai-qwen-oauth",
     "copilot-api",       # free Copilot quota — ranked before paid providers
+    "codex-lb",
     "github-models",
     "openrouter",        # free OpenRouter models
     "openai-custom",
@@ -326,6 +346,8 @@ def resolve_provider(model: str) -> str:
         return "github-models"
     elif model_lower.startswith("copilot-"):
         return "copilot-api"
+    elif model_lower.startswith("codex-"):
+        return "codex-lb"
     elif model_lower.startswith("gemini"):
         return "gemini-antigravity"   # we have Antigravity accounts
     elif model_lower.startswith("claude"):
@@ -370,6 +392,9 @@ class AIClient2APIProxy:
         self.github_token = settings.GITHUB_TOKEN
         # Copilot-API backend (GitHub Copilot → OpenAI/Anthropic proxy)
         self.copilot_base_url = settings.COPILOT_API_BASE_URL.rstrip("/")
+        # Codex-LB backend (soju06/codex-lb proxy)
+        self.codex_base_url = settings.CODEX_LB_BASE_URL.rstrip("/")
+        self.codex_api_key = settings.CODEX_LB_API_KEY
         # OpenRouter — round-robin key rotation for account pooling
         self.openrouter_base_url = settings.OPENROUTER_BASE_URL.rstrip("/")
         raw_keys = settings.OPENROUTER_API_KEYS
@@ -400,6 +425,8 @@ class AIClient2APIProxy:
         elif provider_type == "copilot-api":
             # copilot-api exposes a standard OpenAI-compatible endpoint
             return f"{self.copilot_base_url}/v1/chat/completions"
+        elif provider_type == "codex-lb":
+            return f"{self.codex_base_url}/v1/chat/completions"
         elif provider_type == "openrouter":
             return f"{self.openrouter_base_url}/v1/chat/completions"
 
@@ -417,6 +444,8 @@ class AIClient2APIProxy:
             # via the GitHub OAuth token stored in the container's data volume.
             # We send a dummy bearer so the header is well-formed.
             key = "copilot"
+        elif provider_type == "codex-lb":
+            key = self.codex_api_key
         elif provider_type == "openrouter":
             # Round-robin key rotation for account pooling
             if self._openrouter_key_cycle:
@@ -451,6 +480,8 @@ class AIClient2APIProxy:
             return GITHUB_MODEL_MAP.get(model, model)
         if provider_type == "copilot-api":
             return COPILOT_MODEL_MAP.get(model, model)
+        if provider_type == "codex-lb":
+            return CODEX_MODEL_MAP.get(model, model)
         if provider_type == "openrouter":
             return OPENROUTER_MODEL_MAP.get(model, model)
         

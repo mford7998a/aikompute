@@ -33,6 +33,12 @@ class Settings(BaseSettings):
     # Run: docker exec -it copilot-api npx copilot-api start (then follow the auth link)
     COPILOT_API_BASE_URL: str = "http://localhost:4141"
 
+    # Codex-LB (soju06/codex-lb) — OpenAI-compatible proxy for account rotation
+    # Exposes GitHub Copilot and other accounts as unified OpenAI endpoints.
+    # Admin Dashboard: 2455, API Endpoint: 1455
+    CODEX_LB_BASE_URL: str = "http://localhost:1455"
+    CODEX_LB_API_KEY: str = "any-key-works-here"
+
     # OpenRouter — free-tier models via rotating API keys
     # Comma-separated list of API keys for account pooling.
     # Get keys at https://openrouter.ai/keys

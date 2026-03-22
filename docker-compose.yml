@@ -142,6 +142,36 @@ services:
     networks:
       - inference-net
 
+  # Codex-LB
+  codex-lb:
+    image: ghcr.io/soju06/codex-lb:latest
+    container_name: codex-lb
+    ports:
+      - "2455:2455" # Admin Dashboard
+      - "1457:1455" # OpenAI API
+    volumes:
+      - ./codex-data:/var/lib/codex-lb
+    restart: always
+    networks:
+      - inference-net
+
+  # Chat interface
+  chat:
+    image: ghcr.io/open-webui/open-webui:main
+    container_name: inference-chat
+    ports:
+      - "3001:8080"
+    environment:
+      - 'OPENAI_API_BASE_URL=http://gateway:4000/v1'
+      - 'OPENAI_API_KEY=${MASTER_API_KEY}'
+    volumes:
+      - ./chat-data:/app/backend/data
+    depends_on:
+      - gateway
+    restart: always
+    networks:
+      - inference-net
+
 volumes:
   pgdata:
   redisdata:
