@@ -21,6 +21,18 @@ The system consists of:
 
 ## Change Log
 
+### [2026-03-22] Agent Actions
+* **Routing & Model Translation Fixes (`gateway/proxy.py`)**:
+  * Removed all internal model substitutions for Antigravity, Gemini CLI, and Kiro. The gateway now passes the exact requested model name (e.g. `claude-sonnet-4-6`) directly to the upstream provider since they handle model mappings natively.
+  * Updated `chat_completion_stream()` to actually use the translated model name (was previously sending raw frontend aliases which crashed upstream providers).
+  * Promoted `gemini-antigravity` to be the primary provider for all Claude models, with `claude-kiro-oauth` acting as the fallback.
+* **Streaming Stability (`gateway/routes_chat.py`)**:
+  * Fixed an ASGI worker crash (502 Gateway Error) by replacing bare `HTTPException` raises with yielded JSON-formatted error chunks.
+  * Corrected severe Python syntax errors in the fallback loop (an orphaned `finally` block).
+* **Admin & Dashboard Configuration**:
+  * Verified Nginx properly routes `antigravity.aikompute.com` to `antigravity2api` on port `8045`.
+  * Synced hardcoded `API_KEY` strings between `antigravity2api-nodejs/.env` and the root `.env` file so Docker composition matches the server state.
+
 ### [2026-03-19] Agent Actions
 * **OpenRouter Provider Integration (`gateway/proxy.py`, `gateway/routes_chat.py`, `gateway/config.py`, `docker-compose.prod.yml`)**:
   * Added OpenRouter as a new provider with 19 free-tier models (Llama 3.3 70B, Gemma 3 27B, Hermes 3 405B, Mistral Small 3.1, Nemotron 3 Super 120B, etc.)
